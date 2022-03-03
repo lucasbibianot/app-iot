@@ -51,7 +51,6 @@ export const Profile = () => {
         });
         const { user_metadata } = await metadataResponse.json();
         setUserMetadata(user_metadata);
-        console.log(user)
       } catch (e) {
         console.log(e.message);
       }

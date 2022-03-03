@@ -39,6 +39,7 @@ function MyApp({ Component, pageProps }) {
         </PageHeader>
         <NoSSR>
           <Content>
+            <h1>{process.env.URL}</h1>
             <Component {...pageProps} />
           </Content>
         </NoSSR>
