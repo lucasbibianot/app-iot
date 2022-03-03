@@ -1,18 +1,19 @@
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
-import { LoginButton, Profile } from "./_login-logout";
+import LoginButton, { Profile } from "./_login-logout";
 import "../styles/globals.css";
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
-import { Button, Card, Image, PageHeader } from "antd";
+import { Image, PageHeader } from "antd";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
+import NoSSR from "react-no-ssr";
 
 function MyApp({ Component, pageProps }) {
   return (
     <Auth0Provider
       domain="lucas-bibiano.us.auth0.com"
       clientId="QBTsFhQP6xuwUapsuEqoZxub9DohRs2T"
-      redirectUri="http://localhost:3000"
+      redirectUri={process.env.URL}
       audience="https://lucas-bibiano.us.auth0.com/api/v2/"
       scope="read:current_user update:current_user_metadata"
       cacheLocation="localstorage"
@@ -36,9 +37,11 @@ function MyApp({ Component, pageProps }) {
             <LoginButton />
           </h1>
         </PageHeader>
-        <Content>
-          <Component {...pageProps} />
-        </Content>
+        <NoSSR>
+          <Content>
+            <Component {...pageProps} />
+          </Content>
+        </NoSSR>
         <Footer>
           <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"

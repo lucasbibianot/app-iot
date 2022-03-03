@@ -6,7 +6,7 @@ import Avatar from "antd/lib/avatar/avatar";
 
 const { Panel } = Collapse;
 
-export const LoginButton = () => {
+const LoginButton = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   return (
     !isAuthenticated && (
@@ -58,7 +58,7 @@ export const Profile = () => {
     };
 
     getUserMetadata();
-  }, [getAccessTokenSilently, user?.sub]);
+  }, [getAccessTokenSilently, user?.sub, user]);
   return (
     isAuthenticated && (
       <Collapse key={"c3"} bordered={false}>
@@ -74,3 +74,5 @@ export const Profile = () => {
     )
   );
 };
+
+export default LoginButton;
