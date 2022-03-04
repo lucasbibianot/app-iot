@@ -35,7 +35,7 @@ export const Profile = () => {
   const [userMetadata, setUserMetadata] = useState(null);
   useEffect(() => {
     const getUserMetadata = async () => {
-      const domain = "lucas-bibiano.us.auth0.com";
+      const domain = process.env.AUTH0_DOMAIN;
       try {
         const accessToken = await getAccessTokenSilently({
           audience: `https://${domain}/api/v2/`,

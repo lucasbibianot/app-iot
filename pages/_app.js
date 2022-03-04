@@ -11,10 +11,10 @@ import NoSSR from "react-no-ssr";
 function MyApp({ Component, pageProps }) {
   return (
     <Auth0Provider
-      domain="lucas-bibiano.us.auth0.com"
-      clientId="QBTsFhQP6xuwUapsuEqoZxub9DohRs2T"
+      domain={process.env.AUTH0_DOMAIN}
+      clientId={process.env.AUTH0_CLIENT_ID}
       redirectUri={process.env.URL}
-      audience="https://lucas-bibiano.us.auth0.com/api/v2/"
+      audience={process.env.AUTH0_AUDIENCE}
       scope="read:current_user update:current_user_metadata"
       cacheLocation="localstorage"
     >
