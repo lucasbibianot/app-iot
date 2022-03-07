@@ -1,9 +1,5 @@
-export default function handler(req, res) {
-  const {
-    query: { id, name },
-    method,
-  } = req;
-
+export default async function handler(req, res) {
+  const { method, body } = req;
   switch (method) {
     case "POST":
       const mqtt = require("async-mqtt");
@@ -14,11 +10,11 @@ export default function handler(req, res) {
         protocol: process.env.PROTOCOL_MQTT,
         username: process.env.USER_MQTT,
         password: process.env.PASS_MQTT,
+        clientId: process.env.CLIENT_ID_MQTT,
       };
       const client = mqtt.connect(options);
-
-      const topico = req.query.topic;
-      const msg = req.query.msg;
+      console.log(body.topico);
+      console.log(JSON.stringify(body.msg));
 
       client.on("connect", function () {
         console.log("Connected");
@@ -29,9 +25,9 @@ export default function handler(req, res) {
       client.on("message", function (topic, message) {
         console.log("Received message:", topic, message.toString());
       });
-
-      client.publish(topico, msg);
-      res.status(200).json({ id, name: `User ${id}` });
+      res.status(200);
+      await client.publish(body.topico, JSON.stringify(body.msg));
+      res.status(200).end();
       break;
     default:
       res.setHeader("Allow", ["POST"]);

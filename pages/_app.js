@@ -7,6 +7,7 @@ import { Image, PageHeader } from "antd";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import NoSSR from "react-no-ssr";
+import { AppWrapper } from "../context/state.js";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -39,7 +40,9 @@ function MyApp({ Component, pageProps }) {
         </PageHeader>
         <NoSSR>
           <Content>
-            <Component {...pageProps} />
+            <AppWrapper>
+              <Component {...pageProps} />
+            </AppWrapper>
           </Content>
         </NoSSR>
         <Footer>

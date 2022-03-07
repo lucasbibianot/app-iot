@@ -15,6 +15,7 @@ const nextConfig = {
     AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
     AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
     AUTH0_AUDIENCE: process.env.AUTH0_AUDIENCE,
+    CLIENT_ID_MQTT: process.env.CLIENT_ID_MQTT
   },
 };
 module.exports = nextConfig;
