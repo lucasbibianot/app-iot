@@ -23,7 +23,7 @@ export default async function handler(req, res) {
                      |> filter(fn: (r) => r["topic"] == "${topico}")
                      |> filter(fn: (r) => r["_measurement"] == "${medida}")
                      |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
-                     |> ${ultimo  ? "yield(name: \"mean\")" : "last()"}`;
+                     |> ${ultimo ? "last()" : "yield(name: \"mean\")" }`;
       await queryApi.queryRows(query, {
         next(row, tableMeta) {
           const o = tableMeta.toObject(row);
