@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const {
     query: { periodo },
     method,
@@ -19,7 +19,7 @@ export default function handler(req, res) {
       const queryApi = client.getQueryApi(org);
       const listTopicos = [];
       const query = `from(bucket: "${bucket}") |> range(start: -${periodo}) |> yield()`;
-      queryApi.queryRows(query, {
+      await queryApi.queryRows(query, {
         next(row, tableMeta) {
           const o = tableMeta.toObject(row);
           listTopicos.push({ topico: o.topic });

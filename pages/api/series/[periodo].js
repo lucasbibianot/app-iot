@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const {
-    query: { periodo, topico, medida },
+    query: { periodo, topico, medida, ultimo},
     method,
   } = req;
 
@@ -23,8 +23,8 @@ export default function handler(req, res) {
                      |> filter(fn: (r) => r["topic"] == "${topico}")
                      |> filter(fn: (r) => r["_measurement"] == "${medida}")
                      |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
-                     |> yield(name: "mean")`;
-      queryApi.queryRows(query, {
+                     |> ${ultimo  ? "yield(name: \"mean\")" : "last()"}`;
+      await queryApi.queryRows(query, {
         next(row, tableMeta) {
           const o = tableMeta.toObject(row);
           listaItens.push({
@@ -32,6 +32,7 @@ export default function handler(req, res) {
             medida: o._measurement,
             time: o._time,
             field: o._field,
+            topic_subscribe: o.topic_subscribe,
             valor: o._value,
           });
         },

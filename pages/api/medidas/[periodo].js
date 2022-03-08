@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const {
     query: { periodo, topico },
     method,
@@ -19,7 +19,7 @@ export default function handler(req, res) {
       const queryApi = client.getQueryApi(org);
       const listaItens = [];
       const query = `from(bucket: "${bucket}") |> range(start: -${periodo}) |> filter(fn: (r) => r["topic"] == "${topico}")`;
-      queryApi.queryRows(query, {
+      await queryApi.queryRows(query, {
         next(row, tableMeta) {
           const o = tableMeta.toObject(row);
           listaItens.push({ medidas: o._measurement });
@@ -30,15 +30,16 @@ export default function handler(req, res) {
           res.status(500);
         },
         complete() {
-          res
-            .status(200)
-            .json(
-              JSON.stringify(
-                listaItens
-                  .map((item) => item.medidas)
-                  .filter((item, pos, self) => self.indexOf(item) === pos)
-              )
-            );
+          res.status(200).json(
+            JSON.stringify(
+              listaItens
+                .map((item) => item.medidas)
+                .filter((item, pos, self) => self.indexOf(item) === pos)
+                .map((item) => {
+                  return { topic: topico, medida: item };
+                })
+            )
+          );
         },
       });
       break;
