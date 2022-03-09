@@ -1,4 +1,4 @@
-import { Card, Select, Button, Form, Table, Tag } from "antd";
+import { Card, Select, Button, Form, Table, Tag, Divider } from "antd";
 import { FormOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/lib/form/Form";
@@ -32,14 +32,15 @@ const MyForm = (props) => {
   const columns = [
     {
       title: "Operação",
-      render: (text) => (
-        onLine &&
-        <Button type="primary" htmlType="button" onClick={mensagemMQtt}>
-          {form.getFieldValue("medidas") === "estadoRele" && Math.round(series[0].valor) == 0
-            ? "Ligar"
-            : "Desligar"}
-        </Button>
-      ),
+      render: (text) =>
+        onLine && (
+          <Button type="primary" htmlType="button" onClick={mensagemMQtt}>
+            {form.getFieldValue("medidas") === "estadoRele" &&
+            Math.round(series[0].valor) == 0
+              ? "Ligar"
+              : "Desligar"}
+          </Button>
+        ),
     },
     {
       title: "Tópico",
@@ -135,24 +136,28 @@ const MyForm = (props) => {
         return res.json();
       })
       .then((data) => {
-        setSeries(data);
-        setOnLine(data[0].online);
-        setPostMqtt({
-          topico: data[0].topic_subscribe,
-          msg: {
-            device: data[0].medida,
-            value: Math.round(data[0].valor) == 1 ? 0 : 1,
-            modo: "m",
-          },
-        });
-        setState({ loading: false });
+        if (data !== undefined) {
+          setSeries(data);
+          setOnLine(data[0].online);
+          setPostMqtt({
+            topico: data[0].topic_subscribe,
+            msg: {
+              device: data[0].medida,
+              value: Math.round(data[0].valor) == 1 ? 0 : 1,
+              modo: "m",
+            },
+          });
+          setState({ loading: false });
+        }
       });
+  };
+
+  const atualizar = async () => {
+    onChangeMedida(form.getFieldValue("medidas"));
   };
 
   const mensagemMQtt = async () => {
     setState({ loading: true });
-    console.log("mqtt");
-    console.log(JSON.stringify(postMqtt));
     await fetch(`api/mqtt/publish`, {
       method: "POST",
       body: JSON.stringify(postMqtt),
@@ -163,6 +168,7 @@ const MyForm = (props) => {
       })
       .then((data) => {
         onChangeMedida(postMqtt.msg.device);
+        medidas[0].valor = postMqtt.msg.value;
         setState({ loading: false });
       });
   };
@@ -207,6 +213,10 @@ const MyForm = (props) => {
             </Select>
           </Form.Item>
           <Form.Item {...tailLayout}>
+            <Button type="primary" htmlType="button" onClick={atualizar}>
+              Atualizar
+            </Button>
+            <Divider type="vertical" />
             <Button htmlType="button" onClick={onReset}>
               Reset
             </Button>
