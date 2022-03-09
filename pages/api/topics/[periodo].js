@@ -41,7 +41,6 @@ export default async function handler(req, res) {
             );
         },
       });
-      client.complete();
       break;
     default:
       res.setHeader("Allow", ["GET"]);

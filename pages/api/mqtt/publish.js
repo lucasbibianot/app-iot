@@ -25,7 +25,6 @@ export default async function handler(req, res) {
       client.on("message", function (topic, message) {
         console.log("Received message:", topic, message.toString());
       });
-      res.status(200);
       await client.publish(body.topico, JSON.stringify(body.msg));
       res.status(200).end();
       break;

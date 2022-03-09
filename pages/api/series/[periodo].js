@@ -55,7 +55,6 @@ export default async function handler(req, res) {
           res.status(200).json(JSON.stringify(listaItens));
         },
       });
-      client.complete();
       break;
     default:
       res.setHeader("Allow", ["GET"]);
