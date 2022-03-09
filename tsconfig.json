@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "components/form-device.jsx"  ],
   "exclude": [
     "node_modules"
   ]

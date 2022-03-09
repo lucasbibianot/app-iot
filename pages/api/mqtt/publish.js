@@ -13,8 +13,8 @@ export default async function handler(req, res) {
         clientId: process.env.CLIENT_ID_MQTT,
       };
       const client = mqtt.connect(options);
-      console.log(body.topico);
-      console.log(JSON.stringify(body.msg));
+      console.log(body);
+      console.log(body.msg);
 
       client.on("connect", function () {
         console.log("Connected");

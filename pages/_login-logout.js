@@ -30,6 +30,12 @@ export const LogoutButton = () => {
   );
 };
 
+export const AdmOnly = () => {
+  const { user, isAuthenticated } = useAuth0();
+  console.log(user)
+  return isAuthenticated ? user.profile === "administrator" : false;
+};
+
 export const Profile = () => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [userMetadata, setUserMetadata] = useState(null);
@@ -63,9 +69,21 @@ export const Profile = () => {
       <Collapse key={"c3"} bordered={false}>
         <Panel
           key="1"
-          extra={[<Avatar key={"av01"} src={user.picture} alt={user.name} />]}
+          extra={[
+            <Avatar
+              key={"av01"}
+              src={
+                user.picture
+                  ? user.picture
+                  : "https://joeschmoe.io/api/v1/random"
+              }
+              alt={user.name}
+            />,
+          ]}
         >
-          <p>{user.name} ({user.profile})</p>
+          <p>
+            {user.name} ({user.profile})
+          </p>
           <p>{user.email}</p>
           <LogoutButton />
         </Panel>

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@auth0/auth0-react": "^1.9.0",
     "@influxdata/influxdb-client": "^1.23.0",
     "@nivo/bar": "^0.79.1",

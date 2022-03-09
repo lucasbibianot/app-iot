@@ -1,5 +1,5 @@
-import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
-import LoginButton, { Profile } from "./_login-logout";
+import { Auth0Provider } from "@auth0/auth0-react";
+import LoginButton, { Profile, isAdm } from "./_login-logout";
 import "../styles/globals.css";
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
@@ -40,9 +40,7 @@ function MyApp({ Component, pageProps }) {
         </PageHeader>
         <NoSSR>
           <Content>
-            <AppWrapper>
-              <Component {...pageProps} />
-            </AppWrapper>
+            <AppWrapper>{AdmOnly && <Component {...pageProps} />}</AppWrapper>
           </Content>
         </NoSSR>
         <Footer>
