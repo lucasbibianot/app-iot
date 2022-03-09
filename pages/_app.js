@@ -1,5 +1,5 @@
 import { Auth0Provider } from "@auth0/auth0-react";
-import LoginButton, { Profile, isAdm } from "./_login-logout";
+import LoginButton, { Profile, AdmOnly } from "./_login-logout";
 import "../styles/globals.css";
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
 import Layout, { Content, Footer } from "antd/lib/layout/layout";
