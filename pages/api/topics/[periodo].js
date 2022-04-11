@@ -7,8 +7,8 @@ export default async function handler(req, res) {
   } = req;
 
   switch (method) {
-    case "GET":
-      const { InfluxDB } = require("@influxdata/influxdb-client");
+    case 'GET':
+      const { InfluxDB } = require('@influxdata/influxdb-client');
       const token = process.env.TOKEN_INFLUX;
       const org = process.env.ORG_INFLUX;
       const bucket = process.env.BUCKET_INFLUX;
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         },
         error(error) {
           console.error(error);
-          console.log("Finished ERROR");
+          console.log('Finished ERROR');
           res.status(500);
         },
         complete() {
@@ -34,16 +34,14 @@ export default async function handler(req, res) {
             .status(200)
             .json(
               JSON.stringify(
-                listTopicos
-                  .map((item) => item.topico)
-                  .filter((item, pos, self) => self.indexOf(item) === pos)
+                listTopicos.map((item) => item.topico).filter((item, pos, self) => self.indexOf(item) === pos)
               )
             );
         },
       });
       break;
     default:
-      res.setHeader("Allow", ["GET"]);
+      res.setHeader('Allow', ['GET']);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 }

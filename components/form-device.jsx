@@ -1,83 +1,78 @@
-import { Card, Select, Button, Form, Table, Tag, Divider } from "antd";
-import { FormOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { useForm } from "antd/lib/form/Form";
-
-const { Meta } = Card;
-const { Option } = Select;
-
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
+import { Button, ButtonGroup, Tag, Select, Stack, Skeleton, Container, Divider } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { FormControl, FormLabel, FormErrorMessage, FormHelperText } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer } from '@chakra-ui/react';
 
 const MyForm = (props) => {
-  const [form] = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
   const [topicos, setTopicos] = useState([]);
   const [medidas, setMedidas] = useState([]);
   const [series, setSeries] = useState([]);
   const [onLine, setOnLine] = useState([]);
   const [postMqtt, setPostMqtt] = useState({
-    topico: "",
+    topico: '',
     msg: {
-      device: "",
+      device: '',
       value: 1,
-      modo: "a",
+      modo: 'a',
     },
   });
   const getInitialProps = async ({ req }) => {
-    const userAgent = req ? req.headers["user-agent"] : navigator.userAgent;
+    const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;
     return { userAgent };
   };
 
   const columns = [
     {
-      title: "Operação",
+      title: 'Operação',
       render: (text) =>
         onLine && (
           <Button type="primary" htmlType="button" onClick={mensagemMQtt}>
-            {form.getFieldValue("medidas") === "estadoRele" &&
-            Math.round(series[0].valor) == 0
-              ? "Ligar"
-              : "Desligar"}
+            {form.getFieldValue('medidas') === 'estadoRele' && Math.round(series[0].valor) == 0 ? 'Ligar' : 'Desligar'}
           </Button>
         ),
     },
     {
-      title: "Tópico",
-      dataIndex: "topico",
-      key: "topico",
+      title: 'Tópico',
+      dataIndex: 'topico',
+      key: 'topico',
     },
     {
-      title: "Medida",
-      dataIndex: "medida",
-      key: "medida",
+      title: 'Medida',
+      dataIndex: 'medida',
+      key: 'medida',
     },
     {
-      title: "Data/Hora",
-      dataIndex: "time",
-      key: "time",
+      title: 'Data/Hora',
+      dataIndex: 'time',
+      key: 'time',
     },
     {
-      title: "Subscribed",
-      dataIndex: "topic_subscribe",
-      key: "topic_subscribe",
+      title: 'Subscribed',
+      dataIndex: 'topic_subscribe',
+      key: 'topic_subscribe',
     },
     {
-      title: "Online",
-      dataIndex: "online",
-      key: "online",
-      render: (text) =>
-        text ? <Tag color="green">online</Tag> : <Tag color="red">offline</Tag>,
+      title: 'Online',
+      dataIndex: 'online',
+      key: 'online',
+      render: (text) => (text ? <Tag colorScheme="green">online</Tag> : <Tag colorScheme="red">offline</Tag>),
     },
     {
-      title: "Valor",
-      dataIndex: "valor",
-      key: "valor",
+      title: 'Valor',
+      dataIndex: 'valor',
+      key: 'valor',
       render: (text) =>
         Math.round(text) == 1 ? (
-          <Tag color="green">Ligado</Tag>
+          <Tag colorScheme="green">Ligado</Tag>
         ) : Math.round(text) == 0 ? (
-          <Tag color="red">Desligado</Tag>
+          <Tag colorScheme="red">Desligado</Tag>
         ) : (
           text
         ),
@@ -86,7 +81,7 @@ const MyForm = (props) => {
 
   useEffect(() => {
     setState({ loading: true });
-    fetch("api/topics/1d")
+    fetch('api/topics/1d')
       .then((res) => {
         return res.json();
       })
@@ -126,12 +121,8 @@ const MyForm = (props) => {
   };
   const onChangeMedida = async (medida) => {
     setState({ loading: true });
-    console.log(form.getFieldValue("topic"));
-    await fetch(
-      `api/series/1d?topico=${form.getFieldValue(
-        "topic"
-      )}&medida=${medida}&ultimo=true`
-    )
+    console.log(form.getFieldValue('topic'));
+    await fetch(`api/series/1d?topico=${form.getFieldValue('topic')}&medida=${medida}&ultimo=true`)
       .then((res) => {
         return res.json();
       })
@@ -144,7 +135,7 @@ const MyForm = (props) => {
             msg: {
               device: data[0].medida,
               value: Math.round(data[0].valor) == 1 ? 0 : 1,
-              modo: "m",
+              modo: 'm',
             },
           });
           setState({ loading: false });
@@ -153,15 +144,15 @@ const MyForm = (props) => {
   };
 
   const atualizar = async () => {
-    onChangeMedida(form.getFieldValue("medidas"));
+    onChangeMedida(form.getFieldValue('medidas'));
   };
 
   const mensagemMQtt = async () => {
     setState({ loading: true });
     await fetch(`api/mqtt/publish`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(postMqtt),
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     })
       .then((res) => {
         return res;
@@ -175,57 +166,63 @@ const MyForm = (props) => {
 
   return (
     <>
-      <Card loading={loading}>
-        <Meta
-          avatar={<FormOutlined />}
-          title="Operação"
-          description="Execução de comandos remotos"
-        />
-        <Form form={form} name="control-hooks" onFinish={onFinish}>
-          <Form.Item
-            name="topic"
-            label="Dispositivo"
-            rules={[{ required: true }]}
-          >
-            <Select
-              placeholder="Selecione o dispositivo"
-              onChange={onChangeTopic}
-              allowClear
-            >
-              {topicos.map((item) => (
-                <Option key={item}>{item}</Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item name="medidas" label="Sensor" rules={[{ required: true }]}>
-            <Select
-              placeholder="Selecione o Sensor"
-              onChange={onChangeMedida}
-              allowClear
-            >
-              {medidas.flatMap((item) =>
-                item.medida !== "qtd_boot" ? (
-                  <Option key={item.medida}>{item.medida}</Option>
-                ) : (
-                  <></>
-                )
-              )}
-            </Select>
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="button" onClick={atualizar}>
-              Atualizar
-            </Button>
-            <Divider type="vertical" />
-            <Button htmlType="button" onClick={onReset}>
-              Reset
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
-      <Card>
-        <Table columns={columns} dataSource={series} />
-      </Card>
+      <Container>
+        <Stack>
+          <Skeleton height="20px" isLoaded={!loading} />
+          <Skeleton height="20px" isLoaded={!loading} />
+          <Skeleton height="20px" isLoaded={!loading} />
+        </Stack>
+        <Stack visibility={loading}>
+          <form onSubmit={handleSubmit(onFinish)}>
+            <FormControl as="fieldset" isInvalid={errors.name}>
+              <FormLabel htmlFor="name">Selecione o Dispositivo</FormLabel>
+              <Select
+                placeholder="Selecione o dispositivo"
+                onChange={onChangeTopic}
+                isRequired={true}
+                {...register('dispositivo', {
+                  required: 'Este campo é requerido',
+                  minLength: { value: 4, message: 'Minimum length should be 4' },
+                })}
+              >
+                {topicos.map((item) => (
+                  <option value={item}>{item}</option>
+                ))}
+              </Select>
+              <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+            </FormControl>
+            <FormControl as="fieldset" isInvalid={errors.name}>
+              <FormLabel htmlFor="name">Selecione o Sensor</FormLabel>
+              <Select
+                placeholder="Selecione o Sensor"
+                onChange={onChangeMedida}
+                isRequired={true}
+                {...register('dispositivo', {
+                  required: 'Este campo é requerido',
+                  minLength: { value: 4, message: 'Minimum length should be 4' },
+                })}
+              >
+                {medidas.flatMap((item) =>
+                  item.medida !== 'qtd_boot' ? <option value={item.medida}>{item.medida}</option> : <></>
+                )}
+              </Select>
+              <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+            </FormControl>
+            <ButtonGroup variant="outline" spacing="6">
+              <Button colorScheme="blue" onClick={atualizar}>
+                Atualizar
+              </Button>
+              <Divider type="vertical" />
+              <Button colorScheme="blue" onClick={onReset}>
+                Reset
+              </Button>
+            </ButtonGroup>
+          </form>
+        </Stack>
+      </Container>
+      <TableContainer>
+        <Table variant="simple"></Table>
+      </TableContainer>
     </>
   );
 };
