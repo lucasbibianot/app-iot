@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, Avatar, Box, Button } from '@chakra-ui/react';
+import { Button, MenuItem, Stack, Text } from '@chakra-ui/react';
 
 const LoginButton = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
@@ -17,7 +17,7 @@ const LoginButton = () => {
         }}
         onClick={() => loginWithRedirect()}
       >
-        Log In
+        Entrar
       </Button>
     )
   );
@@ -26,19 +26,9 @@ const LoginButton = () => {
 export const LogoutButton = () => {
   const { logout } = useAuth0();
   return (
-    <Button
-      colorScheme={'green'}
-      bg={'green.400'}
-      rounded={'full'}
-      fontSize="sm"
-      px={3}
-      _hover={{
-        bg: 'green.500',
-      }}
-      onClick={() => logout({ returnTo: window.location.origin })}
-    >
-      Log Out
-    </Button>
+    <MenuItem size={'sm'} onClick={() => logout({ returnTo: window.location.origin })}>
+      Sair
+    </MenuItem>
   );
 };
 
@@ -77,12 +67,12 @@ export const Profile = () => {
   }, [getAccessTokenSilently, user?.sub, user]);
   return (
     isAuthenticated && (
-      <Accordion key={'c3'} bordered={false}>
-        <AccordionItem>
-          <p>{user.name}</p>
-          <p>{user.email}</p>
-        </AccordionItem>
-      </Accordion>
+      <>
+        <Stack spacing={1.5}>
+          <Text>{user.name}</Text>
+          <Text>{user.email}</Text>
+        </Stack>
+      </>
     )
   );
 };

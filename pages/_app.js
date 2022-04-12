@@ -4,11 +4,12 @@ import NoSSR from 'react-no-ssr';
 import { ChakraProvider, VStack, Flex, Spacer } from '@chakra-ui/react';
 import LargeWithAppLinksAndSocial from '../components/footer';
 import MenuHeader from '../components/header';
+import theme from './_theme';
 
 function MyApp({ Component, pageProps }) {
   process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Auth0Provider
         domain={process.env.AUTH0_DOMAIN}
         clientId={process.env.AUTH0_CLIENT_ID}

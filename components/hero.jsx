@@ -21,7 +21,7 @@ export default function CallToActionWithAnnotation() {
           <Stack direction={'column'} spacing={3} align={'center'} alignSelf={'center'} position={'relative'}>
             <LoginButton />
             <Button variant={'link'} colorScheme={'blue'} size={'sm'}>
-              Learn more
+              Saiba mais
             </Button>
             <Box>
               <Icon
@@ -40,7 +40,7 @@ export default function CallToActionWithAnnotation() {
                 top={'-15px'}
                 transform={'rotate(10deg)'}
               >
-                Starting at $15/mo
+                Isso é demais
               </Text>
             </Box>
           </Stack>

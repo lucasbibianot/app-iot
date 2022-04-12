@@ -1,8 +1,8 @@
 import { Button, ButtonGroup, Tag, Select, Stack, Skeleton, Container, Divider } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FormControl, FormLabel, FormErrorMessage, FormHelperText } from '@chakra-ui/react';
-import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer } from '@chakra-ui/react';
+import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
+import { Table, TableContainer } from '@chakra-ui/react';
 
 const MyForm = (props) => {
   const {
@@ -81,12 +81,15 @@ const MyForm = (props) => {
 
   useEffect(() => {
     setState({ loading: true });
-    fetch('api/topics/1d')
+    fetch('/api/topics/30d')
       .then((res) => {
         return res.json();
       })
       .then((data) => {
         setTopicos(data);
+        setState({ loading: false });
+      })
+      .catch((error) => {
         setState({ loading: false });
       });
   }, []);
@@ -101,7 +104,6 @@ const MyForm = (props) => {
   };
 
   const onReset = () => {
-    form.resetFields();
     setMedidas([]);
     setSeries([]);
   };
@@ -110,19 +112,21 @@ const MyForm = (props) => {
     setState({ loading: true });
     setMedidas([]);
     setSeries([]);
-    await fetch(`api/medidas/1d?topico=${topic}`)
+    await fetch(`/api/medidas/1d?topico=${topic}`)
       .then((res) => {
         return res.json();
       })
       .then((data) => {
         setMedidas(data);
         setState({ loading: false });
+      })
+      .catch((error) => {
+        setState({ loading: false });
       });
   };
   const onChangeMedida = async (medida) => {
     setState({ loading: true });
-    console.log(form.getFieldValue('topic'));
-    await fetch(`api/series/1d?topico=${form.getFieldValue('topic')}&medida=${medida}&ultimo=true`)
+    await fetch(`/api/series/1d?topico=${form.getFieldValue('topic')}&medida=${medida}&ultimo=true`)
       .then((res) => {
         return res.json();
       })
@@ -140,6 +144,9 @@ const MyForm = (props) => {
           });
           setState({ loading: false });
         }
+      })
+      .catch((error) => {
+        setState({ loading: false });
       });
   };
 
@@ -172,51 +179,59 @@ const MyForm = (props) => {
           <Skeleton height="20px" isLoaded={!loading} />
           <Skeleton height="20px" isLoaded={!loading} />
         </Stack>
-        <Stack visibility={loading}>
+        <Stack overflow="hidden">
           <form onSubmit={handleSubmit(onFinish)}>
-            <FormControl as="fieldset" isInvalid={errors.name}>
-              <FormLabel htmlFor="name">Selecione o Dispositivo</FormLabel>
-              <Select
-                placeholder="Selecione o dispositivo"
-                onChange={onChangeTopic}
-                isRequired={true}
-                {...register('dispositivo', {
-                  required: 'Este campo é requerido',
-                  minLength: { value: 4, message: 'Minimum length should be 4' },
-                })}
-              >
-                {topicos.map((item) => (
-                  <option value={item}>{item}</option>
-                ))}
-              </Select>
-              <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl as="fieldset" isInvalid={errors.name}>
-              <FormLabel htmlFor="name">Selecione o Sensor</FormLabel>
-              <Select
-                placeholder="Selecione o Sensor"
-                onChange={onChangeMedida}
-                isRequired={true}
-                {...register('dispositivo', {
-                  required: 'Este campo é requerido',
-                  minLength: { value: 4, message: 'Minimum length should be 4' },
-                })}
-              >
-                {medidas.flatMap((item) =>
-                  item.medida !== 'qtd_boot' ? <option value={item.medida}>{item.medida}</option> : <></>
-                )}
-              </Select>
-              <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
-            </FormControl>
-            <ButtonGroup variant="outline" spacing="6">
-              <Button colorScheme="blue" onClick={atualizar}>
-                Atualizar
-              </Button>
-              <Divider type="vertical" />
-              <Button colorScheme="blue" onClick={onReset}>
-                Reset
-              </Button>
-            </ButtonGroup>
+            <Stack>
+              <FormControl as="fieldset" isInvalid={errors.name}>
+                <FormLabel htmlFor="name">Selecione o Dispositivo</FormLabel>
+                <Select
+                  placeholder="Selecione o dispositivo"
+                  onSelect={onChangeTopic}
+                  isRequired={true}
+                  {...register('dispositivo', {
+                    required: 'Este campo é requerido',
+                    minLength: { value: 4, message: 'Minimum length should be 4' },
+                  })}
+                >
+                  {topicos.map((item) => (
+                    <option value={item} key={item}>
+                      {item}
+                    </option>
+                  ))}
+                </Select>
+                <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+              </FormControl>
+            </Stack>
+            <Stack>
+              <FormControl as="fieldset" isInvalid={errors.name}>
+                <FormLabel htmlFor="name">Selecione o Sensor</FormLabel>
+                <Select
+                  placeholder="Selecione o Sensor"
+                  onChange={onChangeMedida}
+                  isRequired={true}
+                  {...register('dispositivo', {
+                    required: 'Este campo é requerido',
+                    minLength: { value: 4, message: 'Minimum length should be 4' },
+                  })}
+                >
+                  {medidas.flatMap((item) =>
+                    item.medida !== 'qtd_boot' ? <option value={item.medida}>{item.medida}</option> : <></>
+                  )}
+                </Select>
+                <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+              </FormControl>
+            </Stack>
+            <Stack>
+              <ButtonGroup variant="outline">
+                <Button colorScheme="blue" onClick={atualizar}>
+                  Atualizar
+                </Button>
+                <Divider type="vertical" />
+                <Button colorScheme="blue" onClick={onReset}>
+                  Reset
+                </Button>
+              </ButtonGroup>
+            </Stack>
           </form>
         </Stack>
       </Container>

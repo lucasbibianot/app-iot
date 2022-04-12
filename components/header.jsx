@@ -14,6 +14,8 @@ import {
   useColorModeValue,
   Stack,
   IconButton,
+  useColorMode,
+  Spacer,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import Logo from './logo';
@@ -44,10 +46,11 @@ const NavLink = ({ children }) => (
 export default function MenuHeader() {
   const { user, isAuthenticated } = useAuth0();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} w="100%">
-        <Flex h={16} alignItems={'center'} justifyContent={'space-between'} w="100%">
+        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -55,7 +58,7 @@ export default function MenuHeader() {
             display={{ md: 'none' }}
             onClick={isOpen ? onClose : onOpen}
           />
-          <HStack spacing={8} alignItems={'center'}>
+          <HStack spacing={6} alignItems={'center'}>
             <Box>
               <Logo />
             </Box>
@@ -65,20 +68,19 @@ export default function MenuHeader() {
               ))}
             </HStack>
           </HStack>
+
           {isAuthenticated && (
-            <Flex alignItems={'center'}>
+            <Flex alignItems={'right'}>
+              <Profile />
+              <Spacer w="3em" />
               <Menu>
                 <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
                   <Avatar size={'md'} src={user.picture ? user.picture : 'https://joeschmoe.io/api/v1/random'} />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>
-                    <Profile />
-                  </MenuItem>
+                  <MenuItem onClick={toggleColorMode}> Tema: {colorMode === 'light' ? 'Escuro' : 'Claro'} </MenuItem>
                   <MenuDivider />
-                  <MenuItem>
-                    {''} <LogoutButton />{' '}
-                  </MenuItem>
+                  <LogoutButton />
                 </MenuList>
               </Menu>
             </Flex>
