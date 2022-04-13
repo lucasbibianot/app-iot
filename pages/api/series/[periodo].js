@@ -35,7 +35,6 @@ export default async function handler(req, res) {
         next(row, tableMeta) {
           const o = tableMeta.toObject(row);
           const timeInMilli = new Date(o._time).getTime();
-          console.log(agora - timeInMilli);
           listaItens.push({
             topico: o.topic,
             medida: o._measurement,

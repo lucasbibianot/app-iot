@@ -1,5 +1,5 @@
 import { Card, Select, Button, Form, Table, Tag, Divider } from "antd";
-import { FormOutlined } from "@ant-design/icons";
+import { FormOutlined, LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/lib/form/Form";
 
@@ -16,6 +16,8 @@ const MyForm = (props) => {
   const [medidas, setMedidas] = useState([]);
   const [series, setSeries] = useState([]);
   const [onLine, setOnLine] = useState([]);
+  const [onOff, setOnOff] = useState(0);
+  const [comando, setComando] = useState(false);
   const [postMqtt, setPostMqtt] = useState({
     topico: "",
     msg: {
@@ -33,13 +35,24 @@ const MyForm = (props) => {
     {
       title: "Operação",
       render: (text) =>
-        onLine && (
-          <Button type="primary" htmlType="button" onClick={mensagemMQtt}>
-            {form.getFieldValue("medidas") === "estadoRele" &&
-            Math.round(series[0].valor) == 0
-              ? "Ligar"
-              : "Desligar"}
-          </Button>
+        onLine &&
+        form.getFieldValue("medidas") === "estadoRele" && (
+          <Button
+            htmlType="button"
+            alt={onOff ? "Ligar" : "Desligar"}
+            onClick={() => {
+              setComando(true);
+              setOnOff(onOff == 0 ? 1 : 0);
+            }}
+            shape="circle"
+            icon={
+              onOff == 0 ? (
+                <LoginOutlined alt="Ligar" />
+              ) : (
+                <LogoutOutlined alt="Desligar" />
+              )
+            }
+          />
         ),
     },
     {
@@ -74,9 +87,11 @@ const MyForm = (props) => {
       dataIndex: "valor",
       key: "valor",
       render: (text) =>
-        Math.round(text) == 1 ? (
+        Math.round(text) == 1 &&
+        form.getFieldValue("medidas") === "estadoRele" &&
+        onOff == 1 ? (
           <Tag color="green">Ligado</Tag>
-        ) : Math.round(text) == 0 ? (
+        ) : onOff == 0 && form.getFieldValue("medidas") === "estadoRele" ? (
           <Tag color="red">Desligado</Tag>
         ) : (
           text
@@ -96,6 +111,20 @@ const MyForm = (props) => {
       });
   }, []);
 
+  useEffect(() => {
+    if (comando) {
+      const newPost = {
+        ...postMqtt,
+        msg: {
+          ...postMqtt.msg,
+          value: onOff,
+        },
+      };
+      console.log(newPost);
+      mensagemMQtt(newPost);
+    }
+  }, [onOff, comando]);
+
   const [state, setState] = useState({
     loading: true,
   });
@@ -112,6 +141,7 @@ const MyForm = (props) => {
   };
 
   const onChangeTopic = async (topic) => {
+    setComando(false);
     setState({ loading: true });
     setMedidas([]);
     setSeries([]);
@@ -126,19 +156,21 @@ const MyForm = (props) => {
   };
   const onChangeMedida = async (medida) => {
     setState({ loading: true });
-    console.log(form.getFieldValue("topic"));
     await fetch(
       `api/series/1d?topico=${form.getFieldValue(
         "topic"
-      )}&medida=${medida}&ultimo=true`
+      )}&medida=${form.getFieldValue("medidas")}&ultimo=true`
     )
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        if (data !== undefined) {
+        if (data !== undefined && data.length > 0) {
           setSeries(data);
           setOnLine(data[0].online);
+          if (!comando) {
+            setOnOff(Math.round(data[0].valor));
+          }
           setPostMqtt({
             topico: data[0].topic_subscribe,
             msg: {
@@ -147,8 +179,8 @@ const MyForm = (props) => {
               modo: "m",
             },
           });
-          setState({ loading: false });
         }
+        setState({ loading: false });
       });
   };
 
@@ -156,21 +188,28 @@ const MyForm = (props) => {
     onChangeMedida(form.getFieldValue("medidas"));
   };
 
-  const mensagemMQtt = async () => {
+  const mensagemMQtt = async (postMqttP) => {
     setState({ loading: true });
     await fetch(`api/mqtt/publish`, {
       method: "POST",
-      body: JSON.stringify(postMqtt),
+      body: JSON.stringify(postMqttP),
       headers: { "Content-Type": "application/json" },
     })
-      .then((res) => {
-        return res;
-      })
+      .then((res) => res)
       .then((data) => {
-        onChangeMedida(postMqtt.msg.device);
-        medidas[0].valor = postMqtt.msg.value;
+        onChangeMedida(postMqttP.msg.device);
+        let serie = [];
+        serie.push({ ...series[0], valor: postMqttP.msg.value });
+        setSeries(serie);
         setState({ loading: false });
       });
+  };
+
+  const alterarModo = async () => {
+    setState({ loading: true });
+    const mqtt = postMqtt;
+    mqtt.msg.modo = "a";
+    mensagemMQtt(mqtt);
   };
 
   return (
@@ -200,7 +239,7 @@ const MyForm = (props) => {
           <Form.Item name="medidas" label="Sensor" rules={[{ required: true }]}>
             <Select
               placeholder="Selecione o Sensor"
-              onChange={onChangeMedida}
+              onChange={() => onChangeMedida(postMqtt)}
               allowClear
             >
               {medidas.flatMap((item) =>
