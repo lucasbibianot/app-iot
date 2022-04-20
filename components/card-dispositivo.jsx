@@ -19,7 +19,6 @@ import useSWR from 'swr';
 import Error from './error';
 
 export default function CardDispositivo(props) {
-  const [medidas, setMedidas] = useState([]);
   const [series, setSeries] = useState([]);
   const [onLine, setOnLine] = useState([]);
   const [postMqtt, setPostMqtt] = useState({
@@ -30,30 +29,19 @@ export default function CardDispositivo(props) {
       modo: 'a',
     },
   });
-  const [state, setState] = useState({
-    loading: true,
-  });
-  const { loading } = state;
-
   const fetcher = (url) => {
-    setState({ loading: true });
-    setMedidas([]);
-    setSeries([]);
-    return fetch(url).then((res) => {
-      setMedidas(data);
-      setState({ loading: false });
-      return res.json();
-    });
+    fetch(url).then((res) => res.json());
   };
-  const { data, error } = useSWR(`/api/medidas/1d?topico=${props.title}`, fetcher);
+  const { medidas, error } = useSWR(`/api/medidas/1d?topico=${props.title}`, fetcher);
   if (error) return <Error title="Erro" text={error} />;
-  if (!data)
+  if (!medidas) {
     return (
       <Box padding="6" boxShadow="lg">
         <SkeletonCircle size="10" />
         <SkeletonText mt="4" noOfLines={4} spacing="4" />
       </Box>
     );
+  }
   const loadSeries = async (medida) => {
     setState({ loading: true });
     await fetch(`/api/series/1d?topico=${getValues('topico')}&medida=${medida}&ultimo=true`)
@@ -176,7 +164,9 @@ export default function CardDispositivo(props) {
             <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
               {props.title}
             </Heading>
-            <Text color={'gray.500'}>Frontend Developer</Text>
+            {medidas.map((item) => (
+              <Text color={'gray.500'}>{item}</Text>
+            ))}
           </Stack>
 
           <Stack direction={'row'} justify={'center'} spacing={6}>
