@@ -33,11 +33,13 @@ export default function CardDispositivo({ dispositivo }) {
       <Box p={6}>
         <Center>
           <Stack spacing={0} align={'center'} mb={5}>
-            <Skeleton isLoaded={!loading}>
-              <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
+            <Skeleton isLoaded={!loading} paddingBottom="0.75rem">
+              <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'} paddingBottom="0.75rem" align="center">
                 {dispositivo}
               </Heading>
-              <StackDivider borderColor="gray.200" />
+            </Skeleton>
+            <StackDivider borderColor="gray.200" />
+            <Skeleton isLoaded={!loading}>
               <MedidasDispositivo series={series} />
             </Skeleton>
           </Stack>

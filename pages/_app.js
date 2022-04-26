@@ -1,7 +1,7 @@
 import { Auth0Provider } from '@auth0/auth0-react';
 import Head from 'next/head';
 import NoSSR from 'react-no-ssr';
-import { ChakraProvider, VStack, Flex, Spacer } from '@chakra-ui/react';
+import { ChakraProvider, VStack, Box } from '@chakra-ui/react';
 import LargeWithAppLinksAndSocial from '../components/footer';
 import MenuHeader from '../components/header';
 import theme from './_theme';
@@ -26,7 +26,9 @@ function MyApp({ Component, pageProps }) {
         <NoSSR>
           <VStack>
             <MenuHeader />
-            <Component {...pageProps} />
+            <Box h='62vh' padding={'1rem'}>
+              <Component {...pageProps} />
+            </Box>
             <LargeWithAppLinksAndSocial />
           </VStack>
         </NoSSR>
