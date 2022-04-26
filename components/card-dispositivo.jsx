@@ -28,6 +28,7 @@ export default function CardDispositivo({ dispositivo }) {
       .then((res) => res.text())
       .then((data) => {
         setState({ ...state, loading: false });
+        setModoOperacao(modo);
         toast({
           title: 'Comando executado com sucesso.',
           description: `Comando executado com sucesso em ${topic_subscribe}:${medida}`,
@@ -55,7 +56,6 @@ export default function CardDispositivo({ dispositivo }) {
       medida: '',
       modo: op,
     });
-    setModoOperacao(op);
   };
 
   useEffect(() => {
