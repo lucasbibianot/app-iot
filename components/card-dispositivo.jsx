@@ -30,7 +30,7 @@ export default function CardDispositivo({ dispositivo }) {
         setState({ ...state, loading: false });
         toast({
           title: 'Comando executado com sucesso.',
-          description: `Comando executado com sucesso em ${topico}:${medida}`,
+          description: `Comando executado com sucesso em ${topic_subscribe}:${medida}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
