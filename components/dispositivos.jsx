@@ -1,4 +1,4 @@
-import { Spinner, GridItem, Text, Stack, StackDivider, Center, Grid } from '@chakra-ui/react';
+import { Spinner, Text, Stack, StackDivider, Wrap, WrapItem } from '@chakra-ui/react';
 import useSWR from 'swr';
 import Error from './error';
 import CardDispositivo from './card-dispositivo';
@@ -12,20 +12,25 @@ const Dispositivos = (props) => {
   if (error) return <Error title="Erro" text={error} />;
   if (!data)
     return (
-      <Stack direction={'column'} divider={<StackDivider borderColor="gray.200" />} spacing={4} align="center"
-        marginTop={'10rem'}>
+      <Stack
+        direction={'column'}
+        divider={<StackDivider borderColor="gray.200" />}
+        spacing={4}
+        align="center"
+        marginTop={'10rem'}
+      >
         <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
         <Text>Aguarde, estamos localizando os seus dispositivos</Text>
       </Stack>
     );
   return (
-    <Grid templateColumns="repeat(2, 1fr)" id="gridDispositivos" gap={6} h="300px">
+    <Wrap>
       {data.map((item) => (
-        <GridItem w={'40vw'} key={item} padding={'1rem'}>
+        <WrapItem key={item} padding={'1rem'}>
           <CardDispositivo dispositivo={item} />
-        </GridItem>
+        </WrapItem>
       ))}
-    </Grid>
+    </Wrap>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Text, Stack, Skeleton, StackDivider, Tag, Switch } from '@chakra-ui/react';
+import { Text, Stack, Skeleton, Tag, Switch, Wrap } from '@chakra-ui/react';
 import { useState } from 'react';
 import Error from './error';
 
@@ -7,7 +7,7 @@ export default function MedidasDispositivo({ series, mensagemMQtt }) {
   const { loading, error } = state;
   if (error) return <Error title="Erro" text={error} />;
   return (
-    <Stack direction={['row']} justify={'center'} spacing={6} divider={<StackDivider borderColor="gray.200" />}>
+    <Wrap direction={['row']} justify={'center'} spacing={6}>
       {series.map((item) => (
         <Stack spacing={0} align={'center'} key={'s' + item.medida}>
           {item.online ? <Tag colorScheme="green">online</Tag> : <Tag colorScheme="red">offline</Tag>}
@@ -40,6 +40,6 @@ export default function MedidasDispositivo({ series, mensagemMQtt }) {
           </Text>
         </Stack>
       ))}
-    </Stack>
+    </Wrap>
   );
 }

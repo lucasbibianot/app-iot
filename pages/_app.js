@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }) {
         <NoSSR>
           <VStack>
             <MenuHeader />
-            <Box h='62vh' padding={'1rem'}>
+            <Box padding={'1rem'}>
               <Component {...pageProps} />
             </Box>
             <LargeWithAppLinksAndSocial />

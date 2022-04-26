@@ -1,7 +1,6 @@
 import { RepeatClockIcon } from '@chakra-ui/icons';
 import { Heading, Box, Stack, Skeleton, Center, StackDivider, useToast, Switch, Text, Button } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
-import { set } from 'react-hook-form';
 import Error from './error';
 import MedidasDispositivo from './medidas-dispositivo';
 
@@ -12,12 +11,12 @@ export default function CardDispositivo({ dispositivo }) {
   const { loading, error } = state;
   const toast = useToast();
 
-  const mensagemMQtt = ({ valor, topico, medida, modo }) => {
+  const mensagemMQtt = ({ valor, topic_subscribe, medida, modo }) => {
     setState({ ...state, loading: true });
     fetch(`/api/mqtt/publish`, {
       method: 'POST',
       body: JSON.stringify({
-        topico: topico,
+        topico: topic_subscribe,
         msg: {
           device: medida,
           value: valor,
@@ -65,6 +64,7 @@ export default function CardDispositivo({ dispositivo }) {
       .then((res) => res.json())
       .then((j) => {
         setState({ ...state, loading: false });
+        console.log(j)
         setSeries(j);
       })
       .catch((error) => {
