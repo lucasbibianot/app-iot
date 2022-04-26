@@ -1,8 +1,8 @@
 export default async function handler(req, res) {
   const { method, body } = req;
   switch (method) {
-    case "POST":
-      const mqtt = require("async-mqtt");
+    case 'POST':
+      const mqtt = require('async-mqtt');
 
       const options = {
         host: process.env.HOST_MQTT,
@@ -14,21 +14,22 @@ export default async function handler(req, res) {
       };
       const client = mqtt.connect(options);
 
-      client.on("connect", function () {
-        console.log("Connected");
+      client.on('connect', function () {
+        console.log('Connected');
       });
-      client.on("error", function (error) {
-        res.status(200).json({ msg: "error" });
+      client.on('error', function (error) {
+        res.status(200).json({ msg: 'error' });
       });
-      client.on("message", function (topic, message) {
-        console.log("Received message:", topic, message.toString());
+      client.on('message', function (topic, message) {
+        console.log('Received message:', topic, message.toString());
       });
       await client.publish(body.topico, JSON.stringify(body.msg));
+      console.log('Mensagem Enviada');
       client.end();
       res.status(200).end();
       break;
     default:
-      res.setHeader("Allow", ["POST"]);
+      res.setHeader('Allow', ['POST']);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
