@@ -2,7 +2,7 @@
 
 export default async function handler(req, res) {
   const {
-    query: { periodo, topico, medida, ultimo },
+    query: { periodo, topico, medida, ultimo, timeseries },
     method,
   } = req;
   return new Promise((resolve, reject) => {
@@ -24,22 +24,27 @@ export default async function handler(req, res) {
                      |> range(start: -${periodo})
                      |> filter(fn: (r) => r["topic"] == "${topico}")
                      ${medida !== undefined ? '|> filter(fn: (r) => r["_measurement"] == "' + medida + '")' : ''}
-                     ${!ultimo ? '|> aggregateWindow(every:' + periodo + ', fn: mean, createEmpty: false)' : ''}
-                     |> ${ultimo ? 'aggregateWindow(every: ' + periodo + ', fn: last) |> last()' : 'yield(name: "mean")'}                     
+                     |> ${
+                       ultimo ? 'aggregateWindow(every: ' + periodo + ', fn: last) |> last()' : 'yield(name: "mean")'
+                     }                     
                      |> sort(columns: ["topic", "_measurement"])`;
         queryApi.queryRows(query, {
           next(row, tableMeta) {
             const o = tableMeta.toObject(row);
             const timeInMilli = new Date(o._time).getTime();
-            listaItens.push({
-              topico: o.topic,
-              medida: o._measurement,
-              time: o._time,
-              field: o._field,
-              topic_subscribe: o.topic_subscribe,
-              valor: o._value,
-              online: agora - timeInMilli <= threshouldOnline,
-            });
+            if (timeseries === undefined) {
+              listaItens.push({
+                topico: o.topic,
+                medida: o._measurement,
+                time: o._time,
+                field: o._field,
+                topic_subscribe: o.topic_subscribe,
+                valor: o._value,
+                online: agora - timeInMilli <= threshouldOnline,
+              });
+            } else {
+              listaItens.push([o._time, o._value]);
+            }
           },
           error(error) {
             console.error(error);
@@ -49,7 +54,17 @@ export default async function handler(req, res) {
           },
           complete() {
             resolve();
-            res.status(200).json(JSON.stringify(listaItens));
+            res.status(200).json(
+              JSON.stringify(
+                timeseries === undefined
+                  ? listaItens
+                  : {
+                      name: medida,
+                      columns: ['date', medida],
+                      points: listaItens,
+                    }
+              )
+            );
           },
         });
         break;

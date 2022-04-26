@@ -13,7 +13,6 @@ export default function CardDispositivo({ dispositivo }) {
 
   const mensagemMQtt = ({ valor, topic_subscribe, medida, modo }) => {
     setState({ ...state, loading: true });
-    console.log(topic_subscribe)
     fetch(`/api/mqtt/publish`, {
       method: 'POST',
       body: JSON.stringify({
