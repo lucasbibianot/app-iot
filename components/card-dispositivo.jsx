@@ -30,8 +30,8 @@ export default function CardDispositivo({ dispositivo }) {
         setState({ ...state, loading: false });
         setModoOperacao(modo);
         toast({
-          title: 'Comando executado com sucesso.',
-          description: `Comando executado com sucesso em ${topic_subscribe}:${medida}`,
+          title: 'Comando enviado com sucesso.',
+          description: `Comando enviado com sucesso para ${topic_subscribe}:${medida}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -43,7 +43,7 @@ export default function CardDispositivo({ dispositivo }) {
   const reboot = () => {
     mensagemMQtt({
       valor: 0,
-      topic_subscribe: dispositivo,
+      topic_subscribe: `cmd/${dispositivo}`,
       medida: 'reboot',
       modo: 'a',
     });
@@ -52,7 +52,7 @@ export default function CardDispositivo({ dispositivo }) {
     const op = modoOperacao === 'a' ? 'm' : 'a';
     mensagemMQtt({
       valor: 0,
-      topic_subscribe: dispositivo,
+      topic_subscribe: `cmd/${dispositivo}`,
       medida: '',
       modo: op,
     });
@@ -84,7 +84,8 @@ export default function CardDispositivo({ dispositivo }) {
             <Skeleton paddingBottom="0.75rem" isLoaded={!loading}>
               <Stack direction={'row'} align="center">
                 <Text fontWeight={'sm'}>Operação Manual?</Text>
-                <Switch id="email-alerts" onChange={handlerModoOperacao} />
+                {modoOperacao === 'm' && <Switch id="email-alerts" onChange={handlerModoOperacao} isSelected />}
+                {modoOperacao === 'a' && <Switch id="email-alerts" onChange={handlerModoOperacao} />}
                 <Button leftIcon={<RepeatClockIcon />} colorScheme="red" variant="solid" size={'sm'} onClick={reboot}>
                   Reiniciar
                 </Button>
