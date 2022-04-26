@@ -4,7 +4,7 @@ import NoSSR from 'react-no-ssr';
 import { ChakraProvider, VStack, Box } from '@chakra-ui/react';
 import LargeWithAppLinksAndSocial from '../components/footer';
 import MenuHeader from '../components/header';
-import theme from './_theme';
+import theme from '../components/theme';
 
 function MyApp({ Component, pageProps }) {
   process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;

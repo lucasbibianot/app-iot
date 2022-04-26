@@ -17,6 +17,5 @@ const nextConfig = {
     AUTH0_AUDIENCE: process.env.AUTH0_AUDIENCE,
     CLIENT_ID_MQTT: process.env.CLIENT_ID_MQTT,
   },
-  pageExtensions: ['_theme.js'],
 };
 module.exports = nextConfig;
