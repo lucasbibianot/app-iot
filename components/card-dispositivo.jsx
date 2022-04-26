@@ -64,7 +64,6 @@ export default function CardDispositivo({ dispositivo }) {
       .then((res) => res.json())
       .then((j) => {
         setState({ ...state, loading: false });
-        console.log(j)
         setSeries(j);
       })
       .catch((error) => {
