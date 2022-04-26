@@ -1,40 +1,10 @@
-import { Text, Stack, Skeleton, StackDivider, Tag, Switch, useToast } from '@chakra-ui/react';
+import { Text, Stack, Skeleton, StackDivider, Tag, Switch } from '@chakra-ui/react';
 import { useState } from 'react';
 import Error from './error';
 
-export default function MedidasDispositivo({ series }) {
+export default function MedidasDispositivo({ series, mensagemMQtt }) {
   const [state, setState] = useState({ loading: false, error: false });
   const { loading, error } = state;
-  const toast = useToast();
-
-  const mensagemMQtt = ({ valor, topico, medida }) => {
-    setState({ ...state, loading: true });
-    fetch(`/api/mqtt/publish`, {
-      method: 'POST',
-      body: JSON.stringify({
-        topico: topico,
-        msg: {
-          device: medida,
-          value: valor,
-          modo: 'a',
-        },
-      }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then((res) => res.text())
-      .then((data) => {
-        setState({ ...state, loading: false });
-        toast({
-          title: 'Comando executado com sucesso.',
-          description: `Comando executado com sucesso em ${topico}:${medida}`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-        });
-      })
-      .catch((error) => console.log(error));
-  };
-
   if (error) return <Error title="Erro" text={error} />;
   return (
     <Stack direction={['row']} justify={'center'} spacing={6} divider={<StackDivider borderColor="gray.200" />}>
@@ -48,11 +18,15 @@ export default function MedidasDispositivo({ series }) {
                   size="md"
                   key={'s1' + item.medida}
                   isChecked
-                  onChange={() => mensagemMQtt({ ...item, valor: 0 })}
+                  onChange={() => mensagemMQtt({ ...item, modo: 'm', valor: 0 })}
                 />
               )}
               {Math.round(item.valor) == 0 && (
-                <Switch size="md" key={'s1' + item.medida} onChange={() => mensagemMQtt({ ...item, valor: 1 })} />
+                <Switch
+                  size="md"
+                  key={'s1' + item.medida}
+                  onChange={() => mensagemMQtt({ ...item, modo: 'm', valor: 1 })}
+                />
               )}
             </Skeleton>
           )}
