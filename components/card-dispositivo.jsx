@@ -43,7 +43,7 @@ export default function CardDispositivo({ dispositivo }) {
   const reboot = () => {
     mensagemMQtt({
       valor: 0,
-      topico: dispositivo,
+      topic_subscribe: dispositivo,
       medida: 'reboot',
       modo: 'a',
     });
@@ -52,7 +52,7 @@ export default function CardDispositivo({ dispositivo }) {
     const op = modoOperacao === 'a' ? 'm' : 'a';
     mensagemMQtt({
       valor: 0,
-      topico: dispositivo,
+      topic_subscribe: dispositivo,
       medida: '',
       modo: op,
     });
