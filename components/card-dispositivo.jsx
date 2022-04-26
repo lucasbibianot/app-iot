@@ -13,6 +13,7 @@ export default function CardDispositivo({ dispositivo }) {
 
   const mensagemMQtt = ({ valor, topic_subscribe, medida, modo }) => {
     setState({ ...state, loading: true });
+    console.log(topic_subscribe)
     fetch(`/api/mqtt/publish`, {
       method: 'POST',
       body: JSON.stringify({
@@ -43,7 +44,7 @@ export default function CardDispositivo({ dispositivo }) {
   const reboot = () => {
     mensagemMQtt({
       valor: 0,
-      topic_subscribe: `cmd/${dispositivo}`,
+      topic_subscribe: `cmd${dispositivo.replace('device','')}`,
       medida: 'reboot',
       modo: 'a',
     });
@@ -52,7 +53,7 @@ export default function CardDispositivo({ dispositivo }) {
     const op = modoOperacao === 'a' ? 'm' : 'a';
     mensagemMQtt({
       valor: 0,
-      topic_subscribe: `cmd/${dispositivo}`,
+      topic_subscribe: `cmd${dispositivo.replace('device','')}`,
       medida: '',
       modo: op,
     });
