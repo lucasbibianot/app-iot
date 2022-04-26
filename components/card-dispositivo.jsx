@@ -1,4 +1,4 @@
-import { Heading, Box, Stack, useColorModeValue, Skeleton, Center, StackDivider } from '@chakra-ui/react';
+import { Heading, Box, Stack, Skeleton, Center, StackDivider } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import Error from './error';
 import MedidasDispositivo from './medidas-dispositivo';
@@ -25,7 +25,6 @@ export default function CardDispositivo({ dispositivo }) {
     <Box
       maxW={'100%'}
       w={'full'}
-      bg={useColorModeValue('white', 'gray.800')}
       boxShadow={'2xl'}
       rounded={'md'}
       overflow={'hidden'}
