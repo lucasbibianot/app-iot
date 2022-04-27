@@ -30,7 +30,7 @@ const DashBoard = (props) => {
         <Wrap>
           {data.map((item) => (
             <WrapItem key={item} padding={'1rem'}>
-              <CardDashBoard dispositivo={item} />
+              <CardDashBoard dispositivo={item} medidas={['temp', 'hum', 'temp_config']} />
             </WrapItem>
           ))}
         </Wrap>
