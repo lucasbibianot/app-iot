@@ -24,9 +24,7 @@ export default async function handler(req, res) {
                      |> range(start: -${periodo})
                      |> filter(fn: (r) => r["topic"] == "${topico}")
                      ${medida !== undefined ? '|> filter(fn: (r) => r["_measurement"] == "' + medida + '")' : ''}
-                     |> ${
-                       ultimo ? 'aggregateWindow(every: ' + periodo + ', fn: last) |> last()' : 'yield(name: "mean")'
-                     }
+                     ${ultimo ? '|> last(column:"_time")' : ''}
                      ${!timeseries ? '|> sort(columns: ["topic", "_measurement"])' : ''}`;
         queryApi.queryRows(query, {
           next(row, tableMeta) {

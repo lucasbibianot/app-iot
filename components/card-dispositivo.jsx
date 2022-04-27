@@ -6,6 +6,7 @@ import MedidasDispositivo from './medidas-dispositivo';
 
 export default function CardDispositivo({ dispositivo }) {
   const [series, setSeries] = useState([]);
+  const [primeiroRegistro, setPrimeiroRegistro] = useState();
   const [modoOperacao, setModoOperacao] = useState('a');
   const [state, setState] = useState({ loading: true, error: false });
   const { loading, error } = state;
@@ -41,9 +42,10 @@ export default function CardDispositivo({ dispositivo }) {
   };
 
   const reboot = () => {
+    console.log(topicSubscribed);
     mensagemMQtt({
       valor: 1,
-      topic_subscribe: `cmd${dispositivo.replace('device','')}`,
+      topic_subscribe: primeiroRegistro.topicSubscribed,
       medida: 'reboot',
       modo: 'a',
     });
@@ -52,7 +54,7 @@ export default function CardDispositivo({ dispositivo }) {
     const op = modoOperacao === 'a' ? 'm' : 'a';
     mensagemMQtt({
       valor: 0,
-      topic_subscribe: `cmd${dispositivo.replace('device','')}`,
+      topic_subscribe: primeiroRegistro.topicSubscribed,
       medida: '',
       modo: op,
     });
@@ -64,6 +66,10 @@ export default function CardDispositivo({ dispositivo }) {
       .then((res) => res.json())
       .then((j) => {
         setState({ ...state, loading: false });
+        const primeiro = j.find((e) => true);
+        if (primeiro) {
+          setPrimeiroRegistro(primeiro);
+        }
         setSeries(j);
       })
       .catch((error) => {
@@ -84,9 +90,26 @@ export default function CardDispositivo({ dispositivo }) {
             <Skeleton paddingBottom="0.75rem" isLoaded={!loading}>
               <Stack direction={'row'} align="center">
                 <Text fontWeight={'sm'}>Operação Manual?</Text>
-                {modoOperacao === 'm' && <Switch id="email-alerts" onChange={handlerModoOperacao} isSelected />}
-                {modoOperacao === 'a' && <Switch id="email-alerts" onChange={handlerModoOperacao} />}
-                <Button leftIcon={<RepeatClockIcon />} colorScheme="red" variant="solid" size={'sm'} onClick={reboot}>
+                {primeiroRegistro.online && (
+                  <>
+                    {modoOperacao === 'm' && <Switch id="email-alerts" onChange={handlerModoOperacao} isSelected />}
+                    {modoOperacao === 'a' && <Switch id="email-alerts" onChange={handlerModoOperacao} />}
+                  </>
+                )}
+                {!primeiroRegistro.online && (
+                  <>
+                    {modoOperacao === 'm' && <Switch id="email-alerts" isSelected isDisabled/>}
+                    {modoOperacao === 'a' && <Switch id="email-alerts"  isDisabled/>}
+                  </>
+                )}
+                <Button
+                  leftIcon={<RepeatClockIcon />}
+                  colorScheme="red"
+                  variant="solid"
+                  size={'sm'}
+                  onClick={reboot}
+                  disabled={!primeiroRegistro.online}
+                >
                   Reiniciar
                 </Button>
               </Stack>
