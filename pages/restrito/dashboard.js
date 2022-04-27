@@ -1,39 +1,42 @@
+import { Spinner, Text, Stack, StackDivider, Wrap, WrapItem } from '@chakra-ui/react';
+import useSWR from 'swr';
+import CardDashBoard from '../../components/card-dashboard';
 import Error from '../../components/error';
 import { AdmOnly } from '../../components/login-logout';
-import Success from '../../components/sucess';
-import { Charts, ChartContainer, ChartRow, YAxis, LineChart } from 'react-timeseries-charts';
-import { TimeSeries, TimeRange } from 'pondjs';
-import useSWR from 'swr';
-import { Text } from '@chakra-ui/react';
+('../components/card-dispositivo');
 
-const DashBoard = () => {
+const DashBoard = (props) => {
   const fetcher = (url) => {
     return fetch(url).then((res) => res.json());
   };
-  const { data, error } = useSWR(
-    '/api/series/1d?topico=device/sensor/ronan/granja/1?medida=temp&timeseries=true',
-    fetcher
-  );
-  if (!data) {
-    return (<Text>Carregando</Text>)
-  }
-  if (data) {
-    const timeseries = new TimeSeries(data);
+  const { data, error } = useSWR('/api/topics/1d', fetcher);
+  if (error) return <Error title="Erro" text={error} />;
+  if (!data)
     return (
-      <>
-        {/* {AdmOnly() && <Success title="Dashboard" text="Monitoramento de dispositivos IOT" />}
-      {!AdmOnly() && <Error title="Dashboard" text="Sem acesso a esta funcionalidade" />} */}
-        <ChartContainer timeRange={timeseries.timerange()} width={800}>
-          <ChartRow height="200">
-            <YAxis id="axis1" label="AUD" min={0.5} max={1.5} width="60" type="linear" format="$,.2f" />
-            <Charts>
-              <LineChart axis="axis1" series={timeseries} />
-            </Charts>
-            <YAxis id="axis2" label="Euro" min={0.5} max={1.5} width="80" type="linear" format="$,.2f" />
-          </ChartRow>
-        </ChartContainer>
-      </>
+      <Stack
+        direction={'column'}
+        divider={<StackDivider borderColor="gray.200" />}
+        spacing={4}
+        align="center"
+        marginTop={'10rem'}
+      >
+        <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
+        <Text>Aguarde, estamos localizando os seus dispositivos</Text>
+      </Stack>
     );
-  }
+  return (
+    <>
+      {AdmOnly() && (
+        <Wrap>
+          {data.map((item) => (
+            <WrapItem key={item} padding={'1rem'}>
+              <CardDashBoard dispositivo={item} />
+            </WrapItem>
+          ))}
+        </Wrap>
+      )}
+      {!AdmOnly() && <Error title="Dashboard" text="Sem acesso a esta funcionalidade" />}
+    </>
+  );
 };
 export default DashBoard;

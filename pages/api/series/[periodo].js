@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         });
         const queryApi = client.getQueryApi(org);
         const agora = new Date().getTime();
-        const threshouldOnline = 300000;
+        const threshouldOnline = 30000;
         const listaItens = [];
         const query = `from(bucket: "${bucket}")
                      |> range(start: -${periodo})
@@ -26,8 +26,8 @@ export default async function handler(req, res) {
                      ${medida !== undefined ? '|> filter(fn: (r) => r["_measurement"] == "' + medida + '")' : ''}
                      |> ${
                        ultimo ? 'aggregateWindow(every: ' + periodo + ', fn: last) |> last()' : 'yield(name: "mean")'
-                     }                     
-                     |> sort(columns: ["topic", "_measurement"])`;
+                     }
+                     ${!timeseries ? '|> sort(columns: ["topic", "_measurement"])' : ''}`;
         queryApi.queryRows(query, {
           next(row, tableMeta) {
             const o = tableMeta.toObject(row);
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
                 online: agora - timeInMilli <= threshouldOnline,
               });
             } else {
-              listaItens.push([o._time, o._value]);
+              listaItens.push([timeInMilli, o._value]);
             }
           },
           error(error) {
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
                   ? listaItens
                   : {
                       name: medida,
-                      columns: ['date', medida],
+                      columns: ['time', medida],
                       points: listaItens,
                     }
               )
