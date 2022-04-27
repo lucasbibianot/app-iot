@@ -3,10 +3,12 @@ import { Heading, Box, Stack, Skeleton, Center, StackDivider, useToast, Switch, 
 import { useState, useEffect } from 'react';
 import Error from './error';
 import MedidasDispositivo from './medidas-dispositivo';
+import TimeAgo from 'timeago-react';
+import pt_BR from 'timeago.js/lib/lang/pt_BR';
 
 export default function CardDispositivo({ dispositivo }) {
   const [series, setSeries] = useState([]);
-  const [primeiroRegistro, setPrimeiroRegistro] = useState({ online: false });
+  const [primeiroRegistro, setPrimeiroRegistro] = useState({ online: false, time: new Date() });
   const [modoOperacao, setModoOperacao] = useState('a');
   const [state, setState] = useState({ loading: true, error: false });
   const { loading, error } = state;
@@ -69,6 +71,7 @@ export default function CardDispositivo({ dispositivo }) {
         const primeiro = j.find((e) => true);
         if (primeiro) {
           setPrimeiroRegistro(primeiro);
+          console.log(primeiroRegistro);
         }
         setSeries(j);
       })
@@ -117,6 +120,10 @@ export default function CardDispositivo({ dispositivo }) {
             <StackDivider borderColor="gray.200" />
             <Skeleton isLoaded={!loading}>
               <MedidasDispositivo series={series} mensagemMQtt={mensagemMQtt} />
+            </Skeleton>
+            <StackDivider borderColor="gray.200" />
+            <Skeleton isLoaded={!loading}>
+              <TimeAgo datetime={primeiroRegistro.time} locale={pt_BR} />
             </Skeleton>
           </Stack>
         </Center>
