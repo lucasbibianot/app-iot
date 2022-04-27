@@ -5,8 +5,10 @@ import Error from './error';
 import MedidasDispositivo from './medidas-dispositivo';
 import TimeAgo from 'timeago-react';
 import pt_BR from 'timeago.js/lib/lang/pt_BR';
+import * as timeago from 'timeago.js'
 
 export default function CardDispositivo({ dispositivo }) {
+  timeago.register('pt_BR', pt_BR);
   const [series, setSeries] = useState([]);
   const [primeiroRegistro, setPrimeiroRegistro] = useState({ online: false, time: new Date() });
   const [modoOperacao, setModoOperacao] = useState('a');
@@ -44,7 +46,6 @@ export default function CardDispositivo({ dispositivo }) {
   };
 
   const reboot = () => {
-    console.log(topicSubscribed);
     mensagemMQtt({
       valor: 1,
       topic_subscribe: primeiroRegistro.topicSubscribed,
@@ -121,9 +122,9 @@ export default function CardDispositivo({ dispositivo }) {
             <Skeleton isLoaded={!loading}>
               <MedidasDispositivo series={series} mensagemMQtt={mensagemMQtt} />
             </Skeleton>
-            <StackDivider borderColor="gray.200" />
+            <StackDivider borderColor="gray.200" padding={'0.5rem'} />
             <Skeleton isLoaded={!loading}>
-              <TimeAgo datetime={primeiroRegistro.time} locale={pt_BR} />
+              <TimeAgo datetime={primeiroRegistro.time} locale={'pt_BR'} />
             </Skeleton>
           </Stack>
         </Center>
