@@ -6,7 +6,7 @@ import MedidasDispositivo from './medidas-dispositivo';
 
 export default function CardDispositivo({ dispositivo }) {
   const [series, setSeries] = useState([]);
-  const [primeiroRegistro, setPrimeiroRegistro] = useState();
+  const [primeiroRegistro, setPrimeiroRegistro] = useState({ online: false });
   const [modoOperacao, setModoOperacao] = useState('a');
   const [state, setState] = useState({ loading: true, error: false });
   const { loading, error } = state;
@@ -98,8 +98,8 @@ export default function CardDispositivo({ dispositivo }) {
                 )}
                 {!primeiroRegistro.online && (
                   <>
-                    {modoOperacao === 'm' && <Switch id="email-alerts" isSelected isDisabled/>}
-                    {modoOperacao === 'a' && <Switch id="email-alerts"  isDisabled/>}
+                    {modoOperacao === 'm' && <Switch id="email-alerts" isSelected isDisabled />}
+                    {modoOperacao === 'a' && <Switch id="email-alerts" isDisabled />}
                   </>
                 )}
                 <Button
