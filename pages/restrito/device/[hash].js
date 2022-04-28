@@ -1,10 +1,10 @@
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { Button, Link, Stack, StackDivider, Text, WrapItem } from '@chakra-ui/react';
+import { Button, Stack, StackDivider, Text, WrapItem } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import CardDashBoard from '../../../components/card-dashboard';
 import base64 from '../../../lib/hash-utils';
 
-const device = () => {
+const Device = (props) => {
   const router = useRouter();
   const { hash } = router.query;
   if (hash)
@@ -22,4 +22,4 @@ const device = () => {
   return <Text>Carregando</Text>;
 };
 
-export default device;
+export default Device;
