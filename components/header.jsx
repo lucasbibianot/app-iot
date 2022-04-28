@@ -24,8 +24,8 @@ import { LogoutButton, Profile } from './login-logout';
 
 const Links = [
   { name: 'Principal', page: '/' },
-  { name: 'Dashboard', page: '../restrito/dashboard' },
-  { name: 'Operações', page: '../restrito/operacoes' },
+  { name: 'Dashboard', page: '/restrito/dashboard' },
+  { name: 'Operações', page: '/restrito/operacoes' },
 ];
 
 const NavLink = ({ children }) => (

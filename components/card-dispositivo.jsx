@@ -5,9 +5,12 @@ import Error from './error';
 import MedidasDispositivo from './medidas-dispositivo';
 import TimeAgo from 'timeago-react';
 import pt_BR from 'timeago.js/lib/lang/pt_BR';
-import * as timeago from 'timeago.js'
+import * as timeago from 'timeago.js';
+import { FaChartBar } from 'react-icons/fa';
+import { useRouter } from 'next/router';
 
-export default function CardDispositivo({ dispositivo }) {
+export default function CardDispositivo({ dispositivo, hash }) {
+  const router = useRouter();
   timeago.register('pt_BR', pt_BR);
   const [series, setSeries] = useState([]);
   const [primeiroRegistro, setPrimeiroRegistro] = useState({ online: false, time: new Date() });
@@ -124,7 +127,12 @@ export default function CardDispositivo({ dispositivo }) {
             </Skeleton>
             <StackDivider borderColor="gray.200" padding={'0.5rem'} />
             <Skeleton isLoaded={!loading}>
-              <TimeAgo datetime={primeiroRegistro.time} locale={'pt_BR'} />
+              <TimeAgo datetime={primeiroRegistro.time} locale={'pt_BR'} margin={'0.25rem'} />
+            </Skeleton>
+            <Skeleton isLoaded={!loading}>
+              <Button rightIcon={<FaChartBar />} onClick={() => router.push(`/restrito/device/${hash}`)} margin={'0.25rem'}>
+                Detalhes
+              </Button>
             </Skeleton>
           </Stack>
         </Center>

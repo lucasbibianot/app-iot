@@ -1,6 +1,6 @@
 import { Charts, ChartContainer, ChartRow, YAxis, LineChart, EventMarker, Baseline } from 'react-timeseries-charts';
 import { TimeSeries } from 'pondjs';
-import { Box, Center, Heading, Skeleton, Stack, Text } from '@chakra-ui/react';
+import { Box, Center, Heading, Skeleton, Spinner, Stack, StackDivider, Text } from '@chakra-ui/react';
 import styler from 'react-timeseries-charts/lib/js/styler';
 import { useEffect, useState } from 'react';
 
@@ -45,11 +45,11 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
 
   useEffect(async () => {
     setStateFetch({ loading: true });
-    const res1 = await fetcher(`/api/series/10d?topico=${dispositivo}&medida=${medida1}&timeseries=true`);
+    const res1 = await fetcher(`/api/series/1d?topico=${dispositivo}&medida=${medida1}&timeseries=true`);
     setData1(res1);
-    const res2 = await fetcher(`/api/series/10d?topico=${dispositivo}&medida=${medida2}&timeseries=true`);
+    const res2 = await fetcher(`/api/series/1d?topico=${dispositivo}&medida=${medida2}&timeseries=true`);
     setData2(res2);
-    const res3 = await fetcher(`/api/series/10d?topico=${dispositivo}&medida=${medida3}&timeseries=true`);
+    const res3 = await fetcher(`/api/series/1d?topico=${dispositivo}&medida=${medida3}&timeseries=true`);
     setData3(res3);
     setStateFetch({ loading: false });
   }, []);
@@ -127,7 +127,12 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
   };
 
   if (loading) {
-    return <Text>Carregando</Text>;
+    return (
+      <Stack direction={'column'} divider={<StackDivider borderColor="gray.200" />} align="center" marginTop={'3rem'}>
+        <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
+        <Text>Carregando o gráfico para {dispositivo}</Text>
+      </Stack>
+    );
   }
 
   if (!loading) {
@@ -144,7 +149,7 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
             <Stack spacing={0} align={'center'} mb={5}>
               <Skeleton isLoaded={!loading}>
                 <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'} paddingBottom="0.75rem" align="center">
-                  {dispositivo}
+                  {dispositivo} nas últimas 24 horas
                 </Heading>
               </Skeleton>
               <ChartContainer

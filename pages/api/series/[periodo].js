@@ -24,8 +24,9 @@ export default async function handler(req, res) {
                      |> range(start: -${periodo})
                      |> filter(fn: (r) => r["topic"] == "${topico}")
                      ${medida !== undefined ? '|> filter(fn: (r) => r["_measurement"] == "' + medida + '")' : ''}
-                     ${ultimo ? '|> last(column:"_time")' : ''}
-                     ${!timeseries ? '|> sort(columns: ["topic", "_measurement"])' : ''}`;
+                     |> group(columns: ["topic", "_measurement"])
+                     |> sort(columns: ["topic", "_measurement", "_time"])
+                     ${ultimo ? '|> last(column:"_time")' : ''}`;
         queryApi.queryRows(query, {
           next(row, tableMeta) {
             const o = tableMeta.toObject(row);
