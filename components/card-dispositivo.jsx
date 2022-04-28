@@ -75,7 +75,6 @@ export default function CardDispositivo({ dispositivo, hash }) {
         const primeiro = j.find((e) => true);
         if (primeiro) {
           setPrimeiroRegistro(primeiro);
-          console.log(primeiroRegistro);
         }
         setSeries(j);
       })
