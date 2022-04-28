@@ -136,8 +136,6 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
   }
 
   if (!loading) {
-    console.log(data2);
-
     const medida1Series = new TimeSeries(data1);
     const medida2Series = new TimeSeries(data2);
     const medida3Series = new TimeSeries(data3);
