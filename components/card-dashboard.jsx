@@ -45,11 +45,11 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
 
   useEffect(async () => {
     setStateFetch({ loading: true });
-    const res1 = await fetcher(`/api/series/1d?topico=${dispositivo}&medida=${medida1}&timeseries=true`);
+    const res1 = await fetcher(`/api/series/10d?topico=${dispositivo}&medida=${medida1}&timeseries=true`);
     setData1(res1);
-    const res2 = await fetcher(`/api/series/1d?topico=${dispositivo}&medida=${medida2}&timeseries=true`);
+    const res2 = await fetcher(`/api/series/10d?topico=${dispositivo}&medida=${medida2}&timeseries=true`);
     setData2(res2);
-    const res3 = await fetcher(`/api/series/1d?topico=${dispositivo}&medida=${medida3}&timeseries=true`);
+    const res3 = await fetcher(`/api/series/10d?topico=${dispositivo}&medida=${medida3}&timeseries=true`);
     setData3(res3);
     setStateFetch({ loading: false });
   }, []);
@@ -100,7 +100,7 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
       const eventValue1 = e1.get(medida1);
       const eventValue2 = e2.get(medida2);
       const eventValue3 = e3.get(medida3);
-      const v1 = `${eventValue1 > 0 ? '+' : ''}${eventValue1}°C`;
+      const v1 = `${eventValue1 > 0 ? '+' : ''}${eventValue1}°C - Limite inferior ${eventValue3}°C`;
       const v2 = `${eventValue2 > 0 ? '+' : ''}${eventValue2} %`;
       const v3 = `${eventValue3 > 0 ? '+' : ''}${eventValue3}°C`;
 
@@ -150,6 +150,9 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
               <ChartContainer
                 timeRange={medida1Series.timerange()}
                 showGridPosition="under"
+                utc={true}
+                enablePanZoom={true}
+                enableDragZoom={true}
                 trackerPosition={state.tracker}
                 onTrackerChanged={(event) => handleTrackerChanged(medida1Series, medida2Series, medida3Series, event)}
               >
