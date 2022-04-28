@@ -8,6 +8,8 @@ import pt_BR from 'timeago.js/lib/lang/pt_BR';
 import * as timeago from 'timeago.js';
 import { FaChartBar } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import { Links } from './header';
+
 
 export default function CardDispositivo({ dispositivo, hash }) {
   const router = useRouter();
@@ -129,7 +131,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
               <TimeAgo datetime={primeiroRegistro.time} locale={'pt_BR'} margin={'0.25rem'} />
             </Skeleton>
             <Skeleton isLoaded={!loading}>
-              <Button rightIcon={<FaChartBar />} onClick={() => router.push(`/restrito/device/${hash}`)} margin={'0.25rem'}>
+              <Button rightIcon={<FaChartBar />} onClick={() => router.push(Links.filter((row) => row.name === 'Device').find((e) => true).page+ hash)} margin={'0.25rem'}>
                 Detalhes
               </Button>
             </Skeleton>

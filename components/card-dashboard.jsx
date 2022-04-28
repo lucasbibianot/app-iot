@@ -3,6 +3,7 @@ import { TimeSeries } from 'pondjs';
 import { Box, Center, Heading, Skeleton, Spinner, Stack, StackDivider, Text } from '@chakra-ui/react';
 import styler from 'react-timeseries-charts/lib/js/styler';
 import { useEffect, useState } from 'react';
+import moment from 'moment';
 
 const CardDashBoard = ({ dispositivo, medidas }) => {
   const [medida1, medida2, medida3] = medidas;
@@ -79,11 +80,10 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
           axis={eixo}
           event={state[evento]}
           column={eixo}
-          markerLabel={state[key]}
-          markerLabelAlign="left"
-          markerLabelStyle={{ fill: '#2db3d1', stroke: 'white' }}
+          markerLabel={'('+ moment(state.tracker).format('DD/MM/YYYY hh:mm:ss a') + ') ' + state[key]}
+          markerLabelStyle={{ fill: 'dark-gray' }}
           markerRadius={3}
-          markerStyle={{ fill: '#2db3d1' }}
+          markerStyle={{ fill: 'gray' }}
         />
       );
     }
@@ -101,7 +101,7 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
       const eventValue2 = e2.get(medida2);
       const eventValue3 = e3.get(medida3);
       const v1 = `${eventValue1 > 0 ? '+' : ''}${eventValue1}°C - Limite inferior ${eventValue3}°C`;
-      const v2 = `${eventValue2 > 0 ? '+' : ''}${eventValue2} %`;
+      const v2 = `${eventValue2} %`;
       const v3 = `${eventValue3 > 0 ? '+' : ''}${eventValue3}°C`;
 
       setState({

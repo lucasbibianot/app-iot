@@ -23,10 +23,13 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { LogoutButton, Profile } from './login-logout';
 
 const Links = [
-  { name: 'Principal', page: '/' },
-  { name: 'Dashboard', page: '/restrito/dashboard' },
-  { name: 'Operações', page: '/restrito/operacoes' },
+  { name: 'Principal', page: '/', show: true },
+  { name: 'Dashboard', page: '/restrito/dashboard', show: false },
+  { name: 'Dispositivos', page: '/restrito/dispositivos', show: true },
+  { name: 'Device', page: '/restrito/device/', show: false },
 ];
+
+export { Links };
 
 const NavLink = ({ children }) => (
   <Link
@@ -64,7 +67,7 @@ export default function MenuHeader() {
             </Box>
             <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
               {Links.map((link) => (
-                <NavLink key={link.page}>{link}</NavLink>
+                link.show && <NavLink key={link.page}>{link}</NavLink>
               ))}
             </HStack>
           </HStack>
