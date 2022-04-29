@@ -27,11 +27,11 @@ import moment from 'moment';
 import CustomCard from './custom-card';
 
 export default function CardDispositivo({ dispositivo, hash }) {
-  const router = useRouter();
   timeago.register('pt_BR', pt_BR);
+  const router = useRouter();
+  const [interval, setInterval] = useState(0);
   const [series, setSeries] = useState([]);
-  const [primeiroRegistro, setPrimeiroRegistro] = useState({ online: false, time: new Date() });
-  const [modoOperacao, setModoOperacao] = useState('a');
+  const [primeiroRegistro, setPrimeiroRegistro] = useState({ online: false, time: new Date(), modo_operacao: 'a' });
   const [state, setState] = useState({ loading: true, error: false });
   const { loading, error } = state;
   const toast = useToast();
@@ -74,7 +74,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
     });
   };
   const handlerModoOperacao = () => {
-    const op = modoOperacao === 'a' ? 'm' : 'a';
+    const op = primeiroRegistro.modo_operacao === 'a' ? 'm' : 'a';
     mensagemMQtt({
       valor: 0,
       topic_subscribe: primeiroRegistro.topic_subscribe,
@@ -92,16 +92,16 @@ export default function CardDispositivo({ dispositivo, hash }) {
         const primeiro = j.find((e) => true);
         if (primeiro) {
           setPrimeiroRegistro(primeiro);
-          setModoOperacao(primeiro.modo_operacao);
         }
         setSeries(j);
+        setInterval(20000);
       })
       .catch((error) => {
+        console.log(error)
         setState({ loading: false, error: true });
       });
   };
-
-  useInterval(setMedidas, 20000);
+  useInterval(setMedidas, interval);
 
   if (error) return <Error title="Erro" text={error} />;
   return (
@@ -123,14 +123,18 @@ export default function CardDispositivo({ dispositivo, hash }) {
                 <Text fontWeight={'sm'}>Operação Manual?</Text>
                 {primeiroRegistro.online && (
                   <>
-                    {modoOperacao === 'm' && <Switch id="email-alerts" onChange={handlerModoOperacao} isSelected />}
-                    {modoOperacao === 'a' && <Switch id="email-alerts" onChange={handlerModoOperacao} />}
+                    {primeiroRegistro.modo_operacao === 'm' && (
+                      <Switch id="email-alerts" onChange={handlerModoOperacao} isSelected />
+                    )}
+                    {primeiroRegistro.modo_operacao === 'a' && (
+                      <Switch id="email-alerts" onChange={handlerModoOperacao} />
+                    )}
                   </>
                 )}
                 {!primeiroRegistro.online && (
                   <>
-                    {modoOperacao === 'm' && <Switch id="email-alerts" isSelected isDisabled />}
-                    {modoOperacao === 'a' && <Switch id="email-alerts" isDisabled />}
+                    {primeiroRegistro.modo_operacao === 'm' && <Switch id="email-alerts" isSelected isDisabled />}
+                    {primeiroRegistro.modo_operacao === 'a' && <Switch id="email-alerts" isDisabled />}
                   </>
                 )}
                 <Button
