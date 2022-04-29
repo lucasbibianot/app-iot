@@ -1,5 +1,5 @@
 import { RepeatClockIcon } from '@chakra-ui/icons';
-import { Heading, Box, Stack, Skeleton, Center, StackDivider, useToast, Switch, Text, Button } from '@chakra-ui/react';
+import { Heading, Box, Stack, Skeleton, Center, StackDivider, useToast, Switch, Text, Button, useInterval } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import Error from './error';
 import MedidasDispositivo from './medidas-dispositivo';
@@ -68,8 +68,8 @@ export default function CardDispositivo({ dispositivo, hash }) {
     });
   };
 
-  useEffect(() => {
-    setState({ ...state, loading: true });
+  const setMedidas = () => {
+    setState({ ...state, loading: true });  
     fetch(`/api/series/1d?topico=${dispositivo}&ultimo=true`)
       .then((res) => res.json())
       .then((j) => {
@@ -83,7 +83,10 @@ export default function CardDispositivo({ dispositivo, hash }) {
       .catch((error) => {
         setState({ loading: false, error: true });
       });
-  }, []);
+  };
+
+  useInterval(setMedidas, 20000)
+
   if (error) return <Error title="Erro" text={error} />;
   return (
     <Box maxW={'100%'} w={'full'} boxShadow={'2xl'} rounded={'md'} overflow={'hidden'}>

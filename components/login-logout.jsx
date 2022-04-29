@@ -37,7 +37,7 @@ export const AdmOnly = () => {
   return isAuthenticated ? user.profile === 'administrator' : false;
 };
 
-export const Profile = () => {
+export const Profile = ({ display }) => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [userMetadata, setUserMetadata] = useState(null);
   useEffect(() => {
@@ -68,9 +68,12 @@ export const Profile = () => {
   return (
     isAuthenticated && (
       <>
-        <Stack spacing={1.5}>
-          <Text>{user.name}</Text>
-          <Text>{user.email}</Text>
+        <Stack spacing={0.5} margin={'0.10rem'} display={display}>
+          <Text fontSize={'0.7rem'}>{user.name}</Text>
+          <Text fontSize={'0.6rem'}>{user.email}</Text>
+        </Stack>
+        <Stack spacing={0.5} margin={'0.10rem'} display={{ md: 'none' }}>
+        <Text fontSize={'0.5rem'}>{user.name}</Text>
         </Stack>
       </>
     )

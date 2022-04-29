@@ -74,8 +74,7 @@ export default function MenuHeader() {
 
           {isAuthenticated && (
             <Flex alignItems={'right'}>
-              <Profile />
-              <Spacer w="3em" />
+              <Profile display={{ base: 'none', md: 'flex' }}/>
               <Menu>
                 <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
                   <Avatar size={'md'} src={user.picture ? user.picture : 'https://joeschmoe.io/api/v1/random'} />
@@ -94,7 +93,7 @@ export default function MenuHeader() {
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                link.show && <NavLink key={link}>{link}</NavLink>
               ))}
             </Stack>
           </Box>
