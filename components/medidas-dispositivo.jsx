@@ -55,8 +55,11 @@ export default function MedidasDispositivo({ series, mensagemMQtt }) {
                 defaultValue={item.valor}
                 onSubmit={(val) => mensagemMQtt({ ...item, medida: 'temp', modo: 'm', valor: val })}
               >
-                <EditablePreview fontWeight={600} padding={'0px'} margin={'0px'} size="xs" />
-                <Input as={EditableInput} size="xs" w={'3rem'} />
+                <Stack direction={'row'}>
+                  <EditablePreview fontWeight={600} padding={'0px'} margin={'0px'} size="xs" />
+                  <Input as={EditableInput} size="xs" w={'3rem'} />
+                  <EditableControls />
+                </Stack>
               </Editable>
             </Tooltip>
           )}

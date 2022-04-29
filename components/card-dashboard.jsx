@@ -141,7 +141,7 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
     const medida3Series = new TimeSeries(data3);
 
     return (
-      <Box maxW={'100%'} w={'full'} boxShadow={'2xl'} rounded={'md'} overflow={'hidden'}>
+      <Box maxW={'100%'} w={'full'} boxShadow={'2xl'} rounded={'md'} overflow={'visible'}>
         <Box p={6}>
           <Center>
             <Stack spacing={0} align={'center'} mb={5}>

@@ -5,14 +5,14 @@ const EditableControls = () => {
   const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
 
   return isEditing ? (
-    <ButtonGroup justifyContent="center" size="sm">
-      <IconButton icon={<CheckIcon />} {...getSubmitButtonProps()} />
-      <IconButton icon={<CloseIcon />} {...getCancelButtonProps()} />
+    <ButtonGroup justifyContent="center" size="xs">
+      <IconButton size="xs" icon={<CheckIcon />} {...getSubmitButtonProps()} />
+      <IconButton size="xs" icon={<CloseIcon />} {...getCancelButtonProps()} />
     </ButtonGroup>
   ) : (
     <Flex justifyContent="center">
-      <IconButton size="sm" icon={<EditIcon />} {...getEditButtonProps()} />
-    </Flex>
+      <IconButton size="xs" icon={<EditIcon />} {...getEditButtonProps()} />
+    </Flex> 
   );
 };
 
