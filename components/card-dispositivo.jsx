@@ -11,6 +11,8 @@ import {
   Text,
   Button,
   useInterval,
+  Tag,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import Error from './error';
@@ -21,6 +23,8 @@ import * as timeago from 'timeago.js';
 import { FaChartBar } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { Links } from './header';
+import moment from 'moment';
+import CustomCard from './custom-card';
 
 export default function CardDispositivo({ dispositivo, hash }) {
   const router = useRouter();
@@ -107,7 +111,11 @@ export default function CardDispositivo({ dispositivo, hash }) {
           <Stack spacing={0} align={'center'} mb={5}>
             <Skeleton isLoaded={!loading}>
               <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'} paddingBottom="0.75rem" align="center">
-                {dispositivo}
+                {primeiroRegistro.nome_dispositivo ? (
+                  <Tooltip label={dispositivo}>{primeiroRegistro.nome_dispositivo}</Tooltip>
+                ) : (
+                  dispositivo
+                )}
               </Heading>
             </Skeleton>
             <Skeleton paddingBottom="0.75rem" isLoaded={!loading}>
@@ -143,7 +151,11 @@ export default function CardDispositivo({ dispositivo, hash }) {
             </Skeleton>
             <StackDivider borderColor="gray.200" padding={'0.5rem'} />
             <Skeleton isLoaded={!loading}>
-              <TimeAgo datetime={primeiroRegistro.time} locale={'pt_BR'} margin={'0.25rem'} />
+              <Tooltip label={moment(primeiroRegistro.time).format('DD/MM/YYYY HH:mm:ss')}>
+                <CustomCard>
+                  <TimeAgo datetime={primeiroRegistro.time} locale={'pt_BR'} margin={'0.25rem'} />
+                </CustomCard>
+              </Tooltip>
             </Skeleton>
             <Skeleton isLoaded={!loading}>
               <Button

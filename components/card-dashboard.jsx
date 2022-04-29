@@ -80,10 +80,10 @@ const CardDashBoard = ({ dispositivo, medidas }) => {
           axis={eixo}
           event={state[evento]}
           column={eixo}
-          markerLabel={'('+ moment(state.tracker).format('DD/MM/YYYY hh:mm:ss a') + ') ' + state[key]}
-          markerLabelStyle={{ fill: 'dark-gray' }}
+          markerLabel={'('+ moment(state.tracker).format('DD/MM/YYYY HH:mm:ss') + ') ' + state[key]}
+          // markerLabelStyle={{ fill: 'dark-gray' }}
           markerRadius={3}
-          markerStyle={{ fill: 'gray' }}
+          // markerStyle={{ fill: 'gray' }}
         />
       );
     }
