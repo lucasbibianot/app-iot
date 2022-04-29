@@ -1,5 +1,18 @@
-import { Text, Stack, Skeleton, Tag, Switch, Wrap } from '@chakra-ui/react';
+import {
+  Text,
+  Stack,
+  Skeleton,
+  Tag,
+  Switch,
+  Wrap,
+  Editable,
+  Input,
+  EditableInput,
+  EditablePreview,
+  Tooltip,
+} from '@chakra-ui/react';
 import { useState } from 'react';
+import EditableControls from './editable-text';
 import Error from './error';
 
 export default function MedidasDispositivo({ series, mensagemMQtt }) {
@@ -30,10 +43,22 @@ export default function MedidasDispositivo({ series, mensagemMQtt }) {
               )}
             </Skeleton>
           )}
-          {!item.medida.startsWith('estado') && (
+          {!item.medida.startsWith('estado') && !item.medida.includes('config') && (
             <Text fontWeight={600} key={'t1' + item.medida}>
               {item.valor}
             </Text>
+          )}
+
+          {item.medida.includes('config') && (
+            <Tooltip label="clique para alterar">
+              <Editable
+                defaultValue={item.valor}
+                onSubmit={(val) => mensagemMQtt({ ...item, medida: 'temp', modo: 'm', valor: val })}
+              >
+                <EditablePreview fontWeight={600} padding={'0px'} margin={'0px'} size="xs" />
+                <Input as={EditableInput} size="xs" w={'3rem'} />
+              </Editable>
+            </Tooltip>
           )}
           <Text fontWeight={'sm'} key={'t2' + item.medida}>
             {item.medida}

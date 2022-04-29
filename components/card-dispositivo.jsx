@@ -94,7 +94,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
           setPrimeiroRegistro(primeiro);
         }
         setSeries(j);
-        setInterval(20000);
+        setInterval(20000000);
       })
       .catch((error) => {
         console.log(error)
