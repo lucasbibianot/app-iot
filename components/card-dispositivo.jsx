@@ -53,7 +53,6 @@ export default function CardDispositivo({ dispositivo, hash }) {
       .then((res) => res.text())
       .then((data) => {
         setState({ ...state, loading: false });
-        setModoOperacao(modo);
         toast({
           title: 'Comando enviado com sucesso.',
           description: `Comando enviado com sucesso para ${topic_subscribe}:${medida}`,
@@ -62,7 +61,16 @@ export default function CardDispositivo({ dispositivo, hash }) {
           isClosable: true,
         });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        setState({ ...state, loading: false });
+        toast({
+          title: 'Erro',
+          description: `Ocorreu um erro ao processar comando: ${topic_subscribe}:${medida}`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
+      });
   };
 
   const reboot = () => {
@@ -94,18 +102,44 @@ export default function CardDispositivo({ dispositivo, hash }) {
           setPrimeiroRegistro(primeiro);
         }
         setSeries(j);
-        setInterval(5000);
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         setState({ loading: false, error: true });
       });
   };
-  useInterval(setMedidas, interval);
+  useEffect(() => {
+    window.clearInterval(0);
+    setMedidas();
+  }, []);
+
+  useEffect(() => {
+    if (interval > 0) {
+      let intervalId = null;
+      const tick = () => setMedidas();
+      if (interval !== null) {
+        intervalId = window.setInterval(tick, interval);
+      }
+      return () => {
+        if (intervalId) {
+          window.clearInterval(intervalId);
+        }
+      };
+    }
+    window.clearInterval(0);
+  }, [interval]);
 
   if (error) return <Error title="Erro" text={error} />;
   return (
     <Box maxW={'100%'} w={'full'} boxShadow={'2xl'} rounded={'md'} overflow={'hidden'}>
+      <Stack direction={'row-reverse'}>
+        <Tooltip label="autoRefresh">
+          <>
+            {interval > 0 && <Switch onChange={() => setInterval(0)} isChecked />}
+            {interval == 0 && <Switch onChange={() => setInterval(30000)} />}
+          </>
+        </Tooltip>
+      </Stack>
       <Box p={6}>
         <Center>
           <Stack spacing={0} align={'center'} mb={5}>
@@ -124,7 +158,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
                 {primeiroRegistro.online && (
                   <>
                     {primeiroRegistro.modo_operacao === 'm' && (
-                      <Switch id="email-alerts" onChange={handlerModoOperacao} isSelected />
+                      <Switch id="email-alerts" onChange={handlerModoOperacao} isChecked />
                     )}
                     {primeiroRegistro.modo_operacao === 'a' && (
                       <Switch id="email-alerts" onChange={handlerModoOperacao} />
@@ -133,7 +167,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
                 )}
                 {!primeiroRegistro.online && (
                   <>
-                    {primeiroRegistro.modo_operacao === 'm' && <Switch id="email-alerts" isSelected isDisabled />}
+                    {primeiroRegistro.modo_operacao === 'm' && <Switch id="email-alerts" isChecked isDisabled />}
                     {primeiroRegistro.modo_operacao === 'a' && <Switch id="email-alerts" isDisabled />}
                   </>
                 )}
