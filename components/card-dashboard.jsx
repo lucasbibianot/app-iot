@@ -1,4 +1,4 @@
-import { Charts, ChartContainer, ChartRow, YAxis, LineChart, EventMarker, Baseline } from 'react-timeseries-charts';
+import { Charts, ChartContainer, ChartRow, YAxis, LineChart, EventMarker} from 'react-timeseries-charts';
 import { TimeSeries } from 'pondjs';
 import { Box, Center, Heading, Skeleton, Spinner, Stack, StackDivider, Text } from '@chakra-ui/react';
 import styler from 'react-timeseries-charts/lib/js/styler';

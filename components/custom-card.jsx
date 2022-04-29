@@ -7,5 +7,5 @@ const CustomCard = React.forwardRef(({ children, ...rest }, ref) => (
     </Tag>
   </Box>
 ));
-
+CustomCard.displayName = 'CustomCard';
 export default CustomCard;
