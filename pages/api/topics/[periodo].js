@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         queryApi.queryRows(query, {
           next(row, tableMeta) {
             const o = tableMeta.toObject(row);
-            listTopicos.push({ topico: o.topic });
+            listTopicos.push({ topic: o.topic });
           },
           error(error) {
             console.error(error);
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
               .status(200)
               .json(
                 JSON.stringify(
-                  listTopicos.map((item) => item.topico).filter((item, pos, self) => self.indexOf(item) === pos)
+                  listTopicos.map((item) => item.topic).filter((item, pos, self) => self.indexOf(item) === pos)
                 )
               );
           },

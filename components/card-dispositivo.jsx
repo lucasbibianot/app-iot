@@ -37,7 +37,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
   const [mqttStart, setMqttStart] = useState(false);
   const toast = useToast();
 
-  const mensagemMQtt = ({ valor, topic_subscribe, medida, modo }) => {
+  const mensagemMQtt = ({ _value, topic_subscribe, _measurement, modo_operacao }) => {
     setState({ ...state, loading: true });
     setMqttStart(true);
     fetch(`/api/mqtt/publish`, {
@@ -45,9 +45,9 @@ export default function CardDispositivo({ dispositivo, hash }) {
       body: JSON.stringify({
         topico: topic_subscribe,
         msg: {
-          device: medida,
-          value: valor,
-          modo: modo,
+          device: _measurement,
+          value: _value,
+          modo: modo_operacao,
         },
       }),
       headers: { 'Content-Type': 'application/json' },
@@ -59,7 +59,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
         }, 400);
         toast({
           title: 'Comando enviado com sucesso.',
-          description: `Comando enviado com sucesso para ${topic_subscribe}:${medida}`,
+          description: `Comando enviado com sucesso para ${topic_subscribe}:${_measurement}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -69,7 +69,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
         setState({ ...state, loading: false });
         toast({
           title: 'Erro',
-          description: `Ocorreu um erro ao processar comando: ${topic_subscribe}:${medida}`,
+          description: `Ocorreu um erro ao processar comando: ${topic_subscribe}:${_measurement}`,
           status: 'error',
           duration: 9000,
           isClosable: true,
@@ -79,19 +79,19 @@ export default function CardDispositivo({ dispositivo, hash }) {
 
   const reboot = () => {
     mensagemMQtt({
-      valor: 1,
+      _value: 1,
       topic_subscribe: primeiroRegistro.topic_subscribe,
-      medida: 'reboot',
-      modo: 'a',
+      _measurement: 'reboot',
+      modo_operacao: 'a',
     });
   };
   const handlerModoOperacao = () => {
     const op = primeiroRegistro.modo_operacao === 'a' ? 'm' : 'a';
     mensagemMQtt({
-      valor: 0,
+      _value: 0,
       topic_subscribe: primeiroRegistro.topic_subscribe,
-      medida: '',
-      modo: op,
+      _measurement: '',
+      modo_operacao: op,
     });
   };
 

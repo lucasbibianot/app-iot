@@ -18,14 +18,14 @@ export default async function handler(req, res) {
         });
         const queryApi = client.getQueryApi(org);
         const listaItens = [];
-        const query = `from(bucket: "${bucket}") 
-                        |> range(start: -${periodo}) 
-                        |> filter(fn: (r) => r["topic"] == "${topico}") 
+        const query = `from(bucket: "${bucket}")
+                        |> range(start: -${periodo})
+                        |> filter(fn: (r) => r["topic"] == "${topico}")
                         |> sort(columns: ["topic"])`;
         queryApi.queryRows(query, {
           next(row, tableMeta) {
             const o = tableMeta.toObject(row);
-            listaItens.push({ medidas: o._measurement });
+            listaItens.push({ _measurement: o._measurement });
           },
           error(error) {
             console.error(error);
@@ -38,10 +38,10 @@ export default async function handler(req, res) {
             res.status(200).json(
               JSON.stringify(
                 listaItens
-                  .map((item) => item.medidas)
+                  .map((item) => item._measurement)
                   .filter((item, pos, self) => self.indexOf(item) === pos)
                   .map((item) => {
-                    return { topic: topico, medida: item };
+                    return { topic: topico, _measurement: item };
                   })
               )
             );

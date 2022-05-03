@@ -33,18 +33,7 @@ export default async function handler(req, res) {
             console.log(o);
             const timeInMilli = new Date(o._time).getTime();
             if (timeseries === undefined) {
-              listaItens.push({
-                topico: o.topic,
-                medida: o._measurement,
-                time: o._time,
-                field: o._field,
-                modo_operacao: o.modo_operacao ? o.modo_operacao : '',
-                nome_dispositivo: o.nome_dispositivo ? o.nome_dispositivo : '',
-                hash: o.hash ? o.hash : '',
-                topic_subscribe: o.topic_subscribe,
-                valor: o._value,
-                online: agora - timeInMilli <= threshouldOnline,
-              });
+              listaItens.push({ ...o, online: agora - timeInMilli <= threshouldOnline });
             } else {
               listaItens.push([timeInMilli, o._value]);
             }

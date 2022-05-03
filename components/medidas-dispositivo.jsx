@@ -22,39 +22,36 @@ export default function MedidasDispositivo({ series, mensagemMQtt }) {
   return (
     <Wrap direction={['row']} justify={'center'} spacing={6}>
       {series.map((item) => (
-        <Stack spacing={0} align={'center'} key={'s' + item.medida}>
+        <Stack spacing={0} align={'center'} key={'s' + item._measurement}>
           {item.online ? <Tag colorScheme="green">online</Tag> : <Tag colorScheme="red">offline</Tag>}
-          {item.online && item.medida.startsWith('estado') && (
+          {item.online && item._measurement.startsWith('estado') && (
             <Skeleton isLoaded={!loading}>
-              {Math.round(item.valor) == 1 && (
+              {Math.round(item._value) == 1 && (
                 <Switch
                   size="md"
-                  key={'s1' + item.medida}
+                  key={'s1' + item._measurement}
                   isChecked
-                  onChange={() => mensagemMQtt({ ...item, modo: 'm', valor: 0 })}
+                  onChange={() => mensagemMQtt({ ...item, modo_operacao: 'm', _value: 0 })}
                 />
               )}
-              {Math.round(item.valor) == 0 && (
+              {Math.round(item._value) == 0 && (
                 <Switch
                   size="md"
-                  key={'s1' + item.medida}
-                  onChange={() => mensagemMQtt({ ...item, modo: 'm', valor: 1 })}
+                  key={'s1' + item._measurement}
+                  onChange={() => mensagemMQtt({ ...item, modo_operacao: 'm', _value: 1 })}
                 />
               )}
             </Skeleton>
           )}
-          {!item.medida.startsWith('estado') && !item.medida.includes('config') && (
-            <Text fontWeight={600} key={'t1' + item.medida}>
-              {item.valor.toFixed(2)}
+          {!item._measurement.startsWith('estado') && !item._measurement.includes('config') && (
+            <Text fontWeight={600} key={'t1' + item._measurement}>
+              {item._value.toFixed(2)}
             </Text>
           )}
 
-          {item.medida.includes('config') && (
+          {item._measurement.includes('config') && (
             <Tooltip label="clique para alterar">
-              <Editable
-                defaultValue={item.valor}
-                onSubmit={(val) => mensagemMQtt({ ...item, medida: 'temp', modo: 'm', valor: val })}
-              >
+              <Editable defaultValue={item._value} onSubmit={(val) => mensagemMQtt({...item, _value: val})}>
                 <Stack direction={'row'}>
                   <EditablePreview fontWeight={600} padding={'0px'} margin={'0px'} size="xs" />
                   <Input as={EditableInput} size="xs" w={'3rem'} />
@@ -63,8 +60,8 @@ export default function MedidasDispositivo({ series, mensagemMQtt }) {
               </Editable>
             </Tooltip>
           )}
-          <Text fontWeight={'sm'} key={'t2' + item.medida}>
-            {item.medida}
+          <Text fontWeight={'sm'} key={'t2' + item._measurement}>
+            {item._measurement}
           </Text>
         </Stack>
       ))}
