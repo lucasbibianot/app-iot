@@ -1,11 +1,13 @@
-import { Spinner, Text, Stack, StackDivider, Wrap, WrapItem } from '@chakra-ui/react';
+import { Spinner, Text, Stack, StackDivider } from '@chakra-ui/react';
 import useSWR from 'swr';
-import CardDashBoard from '../../components/card-dashboard';
-import Plotly from 'plotly.js-basic-dist-min';
-import createPlotlyComponent from 'react-plotly.js/factory';
 import Error from '../../components/error';
 import { AdmOnly } from '../../components/login-logout';
-('../components/card-dispositivo');
+import dynamic from 'next/dynamic'
+
+
+const PlotTeste = dynamic(import('../../components/plot'), {
+  ssr: false,
+});
 
 const DashBoard = (props) => {
   const Plot = createPlotlyComponent(Plotly);
@@ -41,16 +43,6 @@ const DashBoard = (props) => {
   //     {!AdmOnly() && <Error title="Dashboard" text="Sem acesso a esta funcionalidade" />}
   //   </>
   // );
-  <Plot
-    data={[
-      {
-        x: [1, 2, 3],
-        y: [2, 6, 3],
-        type: 'scatter',
-        marker: { color: 'red' },
-      },
-    ]}
-    layout={{ width: 320, height: 240, title: 'A Fancy Plot' }}
-  />;
+  <PlotTeste />;
 };
 export default DashBoard;
