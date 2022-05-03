@@ -18,11 +18,12 @@ export default async function handler(req, res) {
         });
         const queryApi = client.getQueryApi(org);
         const listTopicos = [];
-        const query = `from(bucket: "${bucket}") 
-                        |> range(start: -${periodo}) 
+        const query = `from(bucket: "${bucket}")
+                        |> range(start: -${periodo})
+                        |> filter(fn: (r) => exists r["topic"])
                         |> aggregateWindow(every: ${periodo}, fn: last)
-                        |> last() 
-                        |> group(columns: ["topic"]) 
+                        |> last()
+                        |> group(columns: ["topic"])
                         |> sort(columns: ["topic"])`;
         queryApi.queryRows(query, {
           next(row, tableMeta) {

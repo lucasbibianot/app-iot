@@ -2963,6 +2963,11 @@ picomatch@^2.3.1:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
+plotly.js-basic-dist-min@^2.11.1:
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist-min/-/plotly.js-basic-dist-min-2.11.1.tgz#a45f2c7878ed500e69cebe91445be022d4500624"
+  integrity sha512-bimSpdpvIF/hJA1xVJpQSCfk0ktTnjU+VvTI43nA0FvUQGPUknyqJpg5/cPQ+C7QoO9FiRLi6koVJ15s912EYA==
+
 pondjs@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/pondjs/-/pondjs-0.9.0.tgz#5c931233f8ef56852914eb669506eaac62b0f13b"
@@ -3111,6 +3116,13 @@ react-no-ssr@^1.1.0:
   integrity sha1-MTtI0uJgIPlp7ZjkcvEEgWBOPMg=
   dependencies:
     babel-runtime "6.x.x"
+
+react-plotly.js@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/react-plotly.js/-/react-plotly.js-2.5.1.tgz#11182bf599ef11a0dbfcd171c6f5645535a2b486"
+  integrity sha512-Oya14whSHvPsYXdI0nHOGs1pZhMzV2edV7HAW1xFHD58Y73m/LbG2Encvyz1tztL0vfjph0JNhiwO8cGBJnlhg==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-remove-scroll-bar@^2.1.0:
   version "2.3.1"
