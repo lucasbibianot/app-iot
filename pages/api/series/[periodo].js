@@ -30,7 +30,6 @@ export default async function handler(req, res) {
         queryApi.queryRows(query, {
           next(row, tableMeta) {
             const o = tableMeta.toObject(row);
-            console.log(o);
             const timeInMilli = new Date(o._time).getTime();
             if (timeseries === undefined) {
               listaItens.push({ ...o, online: agora - timeInMilli <= threshouldOnline });

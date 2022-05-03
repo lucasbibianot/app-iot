@@ -32,7 +32,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
   const [interval, setInterval] = useState(0);
   const [series, setSeries] = useState([]);
   const [primeiroRegistro, setPrimeiroRegistro] = useState({ online: false, time: new Date(), modo_operacao: 'a' });
-  const [state, setState] = useState({ loading: true, error: false });
+  const [state, setState] = useState({ loading: false, error: false });
   const { loading, error } = state;
   const [mqttStart, setMqttStart] = useState(false);
   const toast = useToast();
@@ -96,7 +96,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
   };
 
   const setMedidas = () => {
-    setState({ ...state, loading: true });
+    // setState({ ...state, loading: true });
     fetch(`/api/series/1d?topico=${dispositivo}&ultimo=true`)
       .then((res) => res.json())
       .then((j) => {
@@ -199,9 +199,9 @@ export default function CardDispositivo({ dispositivo, hash }) {
             </Skeleton>
             <StackDivider borderColor="gray.200" padding={'0.5rem'} />
             <Skeleton isLoaded={!loading}>
-              <Tooltip label={moment(primeiroRegistro.time).format('DD/MM/YYYY HH:mm:ss')}>
+              <Tooltip label={moment(primeiroRegistro._time).format('DD/MM/YYYY HH:mm:ss')}>
                 <CustomCard>
-                  <TimeAgo datetime={primeiroRegistro.time} locale={'pt_BR'} margin={'0.25rem'} />
+                  <TimeAgo datetime={primeiroRegistro._time} locale={'pt_BR'} margin={'0.25rem'} />
                 </CustomCard>
               </Tooltip>
             </Skeleton>
