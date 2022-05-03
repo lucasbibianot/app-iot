@@ -45,7 +45,7 @@ export default function MedidasDispositivo({ series, mensagemMQtt }) {
           )}
           {!item.medida.startsWith('estado') && !item.medida.includes('config') && (
             <Text fontWeight={600} key={'t1' + item.medida}>
-              {item.valor}
+              {item.valor.toFixed(2)}
             </Text>
           )}
 

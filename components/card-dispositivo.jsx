@@ -34,10 +34,12 @@ export default function CardDispositivo({ dispositivo, hash }) {
   const [primeiroRegistro, setPrimeiroRegistro] = useState({ online: false, time: new Date(), modo_operacao: 'a' });
   const [state, setState] = useState({ loading: true, error: false });
   const { loading, error } = state;
+  const [mqttStart, setMqttStart] = useState(false);
   const toast = useToast();
 
   const mensagemMQtt = ({ valor, topic_subscribe, medida, modo }) => {
     setState({ ...state, loading: true });
+    setMqttStart(true);
     fetch(`/api/mqtt/publish`, {
       method: 'POST',
       body: JSON.stringify({
@@ -52,7 +54,9 @@ export default function CardDispositivo({ dispositivo, hash }) {
     })
       .then((res) => res.text())
       .then((data) => {
-        setState({ ...state, loading: false });
+        setTimeout(() => {
+          setMqttStart(false);
+        }, 400);
         toast({
           title: 'Comando enviado com sucesso.',
           description: `Comando enviado com sucesso para ${topic_subscribe}:${medida}`,
@@ -108,6 +112,12 @@ export default function CardDispositivo({ dispositivo, hash }) {
         setState({ loading: false, error: true });
       });
   };
+
+  useEffect(() => {
+    setState({ ...state, loading: true });
+    setMedidas();
+  }, [mqttStart]);
+
   useEffect(() => {
     window.clearInterval(0);
     setMedidas();
@@ -133,7 +143,7 @@ export default function CardDispositivo({ dispositivo, hash }) {
   return (
     <Box maxW={'100%'} w={'full'} boxShadow={'2xl'} rounded={'md'} overflow={'hidden'}>
       <Stack direction={'row-reverse'}>
-        <Tooltip label="autoRefresh">
+        <Tooltip label="Auto refresh">
           <>
             {interval > 0 && <Switch onChange={() => setInterval(0)} isChecked />}
             {interval == 0 && <Switch onChange={() => setInterval(30000)} />}
