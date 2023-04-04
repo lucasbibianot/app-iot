@@ -33,7 +33,7 @@
     "react-plotly.js": "^2.6.0",
     "react-table": "^7.8.0",
     "react-timeseries-charts": "^0.16.1",
-    "swr": "^3.1.2",
+    "swr": "^2.1.2",
     "timeago-react": "^3.0.6"
   },
   "devDependencies": {
