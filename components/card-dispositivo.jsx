@@ -85,6 +85,10 @@ export default function CardDispositivo({ dispositivo, hash }) {
       modo_operacao: 'a',
     });
   };
+
+  const teste = () => {
+    console.log('Ola');
+  };
   const handlerModoOperacao = () => {
     const op = primeiroRegistro.modo_operacao === 'a' ? 'm' : 'a';
     mensagemMQtt({
