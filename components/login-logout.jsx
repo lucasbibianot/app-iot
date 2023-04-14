@@ -26,7 +26,7 @@ const LoginButton = () => {
 export const LogoutButton = () => {
   const { logout } = useAuth0();
   return (
-    <MenuItem size={'sm'} onClick={() => logout({ returnTo: window.location.origin })}>
+    <MenuItem size={'sm'} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
       Sair
     </MenuItem>
   );
@@ -40,13 +40,17 @@ export const AdmOnly = () => {
 export const Profile = ({ display }) => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [userMetadata, setUserMetadata] = useState(null);
+
   useEffect(() => {
     const getUserMetadata = async () => {
       const domain = process.env.AUTH0_DOMAIN;
+
       try {
         const accessToken = await getAccessTokenSilently({
-          audience: `https://${domain}/api/v2/`,
-          scope: 'read:current_user',
+          authorizationParams: {
+            audience: `https://${domain}/api/v2/`,
+            scope: 'read:current_user',
+          },
         });
 
         const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
@@ -56,7 +60,9 @@ export const Profile = ({ display }) => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+
         const { user_metadata } = await metadataResponse.json();
+
         setUserMetadata(user_metadata);
       } catch (e) {
         console.log(e.message);
@@ -64,7 +70,7 @@ export const Profile = ({ display }) => {
     };
 
     getUserMetadata();
-  }, [getAccessTokenSilently, user?.sub, user]);
+  }, [getAccessTokenSilently, user?.sub]);
   return (
     isAuthenticated && (
       <>
@@ -73,7 +79,7 @@ export const Profile = ({ display }) => {
           <Text fontSize={'0.6rem'}>{user.email}</Text>
         </Stack>
         <Stack spacing={0.5} margin={'0.10rem'} display={{ md: 'none' }}>
-        <Text fontSize={'0.5rem'}>{user.name}</Text>
+          <Text fontSize={'0.5rem'}>{user.name}</Text>
         </Stack>
       </>
     )

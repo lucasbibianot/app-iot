@@ -13,8 +13,10 @@ function MyApp({ Component, pageProps }) {
       <Auth0Provider
         domain={process.env.AUTH0_DOMAIN}
         clientId={process.env.AUTH0_CLIENT_ID}
-        redirectUri={process.env.URL}
-        audience={process.env.AUTH0_AUDIENCE}
+        authorizationParams={{
+          redirect_uri: process.env.URL,
+        }}
+        audience={`https://${process.env.AUTH0_DOMAIN}${process.env.AUTH0_AUDIENCE}`}
         scope="read:current_user update:current_user_metadata"
         cacheLocation="localstorage"
       >
